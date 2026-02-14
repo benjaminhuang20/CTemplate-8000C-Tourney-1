@@ -37,7 +37,7 @@ float deadband(int num, float deadRange){
     return num; 
 }
 
-void drivePIDTuner(float Pincrement, float Iincrement, int Dincrement){
+int drivePIDTuner(float Pincrement, float Iincrement, int Dincrement){
     bool toggleA, toggleLeft, toggleRight, toggleUp, toggleDown;
     int arrowPosition = 2;
     while (true)
@@ -117,9 +117,11 @@ void drivePIDTuner(float Pincrement, float Iincrement, int Dincrement){
         }
         wait(10, msec); 
     }
+
+    return 0; 
 }
 
-void headingPIDTuner(float Pincrement, float Iincrement, int Dincrement){
+int headingPIDTuner(float Pincrement, float Iincrement, int Dincrement){
     bool toggleA, toggleLeft, toggleRight, toggleUp, toggleDown;
     int arrowPosition = 2;
     while (true)
@@ -202,4 +204,6 @@ void headingPIDTuner(float Pincrement, float Iincrement, int Dincrement){
         }
         wait(10, msec); 
     }
+
+    return 0; 
 }

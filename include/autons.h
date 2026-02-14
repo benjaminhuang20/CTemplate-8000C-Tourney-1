@@ -1,3 +1,4 @@
 #pragma once
 
-void test(); 
+void test();
+void right4Ball();

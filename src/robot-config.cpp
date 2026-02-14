@@ -21,9 +21,13 @@ motor rightBack = motor(PORT8, ratio6_1, true);
 motor intakeLeft = motor(PORT14, ratio6_1, true); 
 motor intakeRight = motor(PORT15, ratio6_1, false);
 
-digital_out scraper = digital_out(Brain.ThreeWirePort.A); 
+digital_out scraper = digital_out(Brain.ThreeWirePort.B); 
 digital_out descoreLeft = digital_out(Brain.ThreeWirePort.A); 
-digital_out descoreMid = digital_out(Brain.ThreeWirePort.A); 
+digital_out tripleStateOne = digital_out(Brain.ThreeWirePort.C);
+digital_out tripleStateTwo = digital_out(Brain.ThreeWirePort.D);
+digital_out mid = digital_out(Brain.ThreeWirePort.A);
+
+digital_out descoreMid = digital_out(Brain.ThreeWirePort.C);
 
 chassis Chassis = chassis(
     /*
@@ -67,4 +71,6 @@ chassis Chassis = chassis(
     vex::distance(PORT19),
     vex::distance(PORT18)
 );
+
+bool auto_started = false; 
 // Motor is PORT, CARTRIDGE (blue is ratio6_1), reversed or not
