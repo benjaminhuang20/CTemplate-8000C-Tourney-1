@@ -12,7 +12,7 @@ using namespace vex;
 void pre_auton(){ //set things like if pneumatics start actuated or not here and any variables that have to start at a certain position
   // float driveP, float driveI, float driveD, float driveMaxTime, float driveSettleTime, float driveSettleError, float driveMaxOutputVolts
   Chassis.set_drive_constants(2,0,100,5000,100,0.5,10);
-  Chassis.set_turn_constants(0.35, 0.025, 30, 5000, 100, 2, 12);
+  Chassis.set_turn_constants(0.35, 0.025, 30, 2000, 100, 2, 12);
   Chassis.pidUpdateTime = 10;
   while(!auto_started){
     Controller.Screen.clearScreen();
@@ -31,7 +31,11 @@ void pre_auton(){ //set things like if pneumatics start actuated or not here and
 void auton(){
   auto_started = true; 
   // test();
-  right4Ball();
+  // right4Ball();
+  // rightLowerGoal();
+  skills(); 
+  // Chassis.drive_inches_from_wall(10, 0);
+  // Chassis.drive_inches(2);
   // Chassis.turn_to_angle(90);
   // Chassis.turn_to_angle(180);
   // Chassis.turn_to_angle(270);
@@ -50,39 +54,59 @@ void auton(){
   // Chassis.arcade(12.f, 12.f);
 }
 
+void yousuck(){
+
+}
+
 void usercontrol(){
   auto_started = true; 
   // drivePIDTuner(0.1, 0.01, 1); 
 
   
   int storing = 0;
+  float intakeSpeed = 120.f;
 
   bool toggleR2 = true, toggleX = true, toggleY = true, toggleA = true;
 
   while(true){
     Chassis.arcade(12.f, 12.f);
     intakeLeft.spin(fwd, 120 * (controller(primary).ButtonL1.pressing() - controller(primary).ButtonR1.pressing()), volt); 
-    intakeRight.spin(fwd, 120 * (controller(primary).ButtonL1.pressing() - controller(primary).ButtonR1.pressing()), volt); 
+    if(storing == 0){
+      intakeRight.spin(fwd, -2, volt); 
+    } else{
+      intakeRight.spin(fwd, 120 * (controller(primary).ButtonL1.pressing() - controller(primary).ButtonR1.pressing()) * storing, volt);
+    }
+    
+    
+    
 
     if(controller(primary).ButtonR2.pressing()){
       if(toggleR2){
-        if (storing == 0){//Long
-          storing = 1;
-          tripleStateOne = true; 
-          tripleStateTwo = true; 
+        if(storing == 0){
+          storing = 1; 
+        } else {
+          storing = 0; 
         }
-        else if (storing == 1) //store
-        {
-          storing = 2;
-          tripleStateOne = false; 
-          tripleStateTwo = true; 
-        }
-        else if (storing == 2) //middle
-        {
-          storing = 0;
-          tripleStateOne = false; 
-          tripleStateTwo = false; 
-        }
+
+        // if (storing == 0){//Long
+        //   storing = 1;
+        //   intakeSpeed = 120.f;
+        //   tripleStateOne = true;
+        //   tripleStateTwo = true; 
+        // }
+        // else if (storing == 1) //store
+        // {
+        //   storing = 0;
+        //   intakeSpeed = 8.f;
+        //   tripleStateOne = true;
+        //   tripleStateTwo = false; 
+        // } else if (storing == 2){
+        //   storing = 1;
+        //   intakeSpeed = 120.f;
+        //   tripleStateOne = true;
+        //   tripleStateTwo = true; 
+        // }
+
         toggleR2 = false; 
       }
     } else{
@@ -104,23 +128,52 @@ void usercontrol(){
       descoreLeft = true; 
     }
 
-    if(controller(primary).ButtonY.pressing()){
-        if(toggleY){
-          descoreMid = !descoreMid;
-          toggleY= false; 
-        }
-    } else{
-      toggleY = true; 
-    }
+    // if(controller(primary).ButtonY.pressing()){
+    //     if(toggleY){
+    //       descoreMid = !descoreMid;
+    //       toggleY= false; 
+    //     }
+    // } else{
+    //   toggleY = true; 
+    // }
 
     if(controller(primary).ButtonA.pressing()){
-        if(toggleA){
-          mid = !mid;
-          toggleA= false; 
-        }
+      if(toggleA){
+        mid = !mid;
+        toggleA = false;
+      }
     } else{
       toggleA = true; 
     }
+
+    // if(controller(primary).ButtonA.pressing()){
+    //     if(toggleA){
+    //       if (storing == 0){ //long 
+    //         storing = 2;
+    //         intakeSpeed = 120.f;
+    //         tripleStateOne = true;
+    //         tripleStateTwo = true; 
+    //       }
+    //       else if (storing == 1) //storing goes to long
+    //       {
+    //         storing = 2;
+    //         intakeSpeed = 120.f;
+    //         tripleStateOne = true;
+    //         tripleStateTwo = true; 
+    //       }
+    //       else if (storing == 2)
+    //       { // middle
+    //         storing = 0;
+    //         intakeSpeed = 120.f;
+    //         tripleStateOne = false; // middle triple state
+    //         tripleStateTwo = false;
+    //       }
+
+    //       toggleA= false; 
+    //     }
+    // } else{
+    //   toggleA = true; 
+    // }
     wait(10, msec);
   }
 }
@@ -128,7 +181,8 @@ void usercontrol(){
 int main() {
   // Set up callbacks for autonomous and driver control periods.
   Competition.autonomous(auton);
-  Competition.drivercontrol(usercontrol);
+  // Competition.drivercontrol(yousuck);
+  Competition.drivercontrol(usercontrol); 
   // Competition.drivercontrol(drivePIDTuner);
 
   // Run the pre-autonomous function.

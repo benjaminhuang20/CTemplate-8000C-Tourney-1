@@ -45,7 +45,8 @@ class chassis{
         void set_odom_constants(float odomP, float odomI, float odomD, float odomMaxTime, float odomSettleTime, float odomSettleError, float odomMaxOutputVolts);
         void set_turn_constants(float turnP, float turnI, float turnD, float turnMaxTime, float turnSettleTime, float turnSettleError, float turnMaxOutputVolts);
         float get_heading();
-        float leftPositionInches(); 
+        void set_heading(float heading); 
+        float leftPositionInches();
         float rightPositionInches(); 
 
         void arcade(float driveVolt, float turnVolt);
@@ -63,6 +64,12 @@ class chassis{
 
         void drive_inches_from_wall(float distance, Wall wall); 
         void drive_inches_from_wall(float distance, float heading, Wall wall);
+
+        void drive_inches_from_wall(float distance, int wall); 
+        void drive_inches_from_wall(float distance, float heading, int wall);
+
+        void matchload(float distance, float time);
+        void matchload(float distance, float heading, float time); 
 
         void left_swing_to_angle(float heading); 
         void right_swing_to_angle(float heading); 

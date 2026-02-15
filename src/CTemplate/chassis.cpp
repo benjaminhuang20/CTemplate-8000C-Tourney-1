@@ -50,6 +50,11 @@ float chassis::get_heading(){
     return reduce_heading(gyroscope.rotation() * 360.f / gyroScale); 
 }
 
+void chassis::set_heading(float heading)
+{
+    gyroscope.setRotation(heading*gyroScale/360.0, deg);
+}
+
 float chassis::leftPositionInches(){
     /*
         distance = circumference * driver / driven * #rotations
@@ -173,11 +178,50 @@ void chassis::turn_to_angle(float heading){
     right.stop(brake); 
 }
 
-void chassis::drive_inches_from_wall(float distance, Wall wall){
-    drive_inches_from_wall(distance, get_heading(), wall); 
+// void chassis::drive_inches_from_wall(float distance, Wall wall){
+//     drive_inches_from_wall(distance, get_heading(), wall); 
+// }
+
+// void chassis::drive_inches_from_wall(float distance, float heading, Wall wall){
+//     pid drivePID = pid(driveP, driveI, driveD, pidUpdateTime, driveMaxTime, driveSettleTime, driveSettleError, driveMaxOutputVolts); 
+//     pid turnPID = pid(turnP, turnI, turnD, pidUpdateTime, turnMaxTime, turnSettleTime, turnSettleError, turnMaxOutputVolts);
+//     float currentPosition;
+//     float driveError, turnError;
+//     float driveVoltage, turnVoltage; 
+
+//     heading = reduce_heading(heading); 
+
+//     while (!drivePID.settled() || !turnPID.settled())
+//     {
+//         if (wall == BACK_WALL){
+//             currentPosition = backDistance.objectDistance(vex::distanceUnits::in);
+//         } else if (wall == FRONT_WALL){
+//             currentPosition = frontDistance.objectDistance(vex::distanceUnits::in);
+//         }
+//         driveError = (wall == BACK_WALL) ? distance - currentPosition : currentPosition - distance;
+//         // driveError = currentPosition - distance; 
+
+//         turnError = reduce_heading(heading - get_heading()); 
+//         if(turnError > 180) turnError -= 360; 
+
+//         driveVoltage = drivePID.compute(driveError);
+//         turnVoltage = turnPID.compute(turnError); 
+//         left.spin(fwd, driveVoltage + turnVoltage, volt);
+//         right.spin(fwd, driveVoltage - turnVoltage, volt);
+
+//         wait(pidUpdateTime, msec); 
+//     }
+
+//     left.stop(brake);
+//     right.stop(brake); 
+// }
+
+void chassis::drive_inches_from_wall(float distance, int wall)
+{ // 0 is back wall 1 is front wall
+    drive_inches_from_wall(distance, get_heading(), wall);
 }
 
-void chassis::drive_inches_from_wall(float distance, float heading, Wall wall){
+void chassis::drive_inches_from_wall(float distance, float heading, int wall){
     pid drivePID = pid(driveP, driveI, driveD, pidUpdateTime, driveMaxTime, driveSettleTime, driveSettleError, driveMaxOutputVolts); 
     pid turnPID = pid(turnP, turnI, turnD, pidUpdateTime, turnMaxTime, turnSettleTime, turnSettleError, turnMaxOutputVolts);
     float currentPosition;
@@ -188,12 +232,13 @@ void chassis::drive_inches_from_wall(float distance, float heading, Wall wall){
 
     while (!drivePID.settled() || !turnPID.settled())
     {
-        if (wall == BACK_WALL){
+        if (wall == 0){
             currentPosition = backDistance.objectDistance(vex::distanceUnits::in);
-        } else if (wall = FRONT_WALL){
+        } else if (wall == 1){
             currentPosition = frontDistance.objectDistance(vex::distanceUnits::in);
         }
-        driveError = (wall == BACK_WALL) ? distance - currentPosition : currentPosition - distance;
+        driveError = (wall == 0) ? distance - currentPosition : currentPosition - distance;
+        // driveError = currentPosition - distance; 
 
         turnError = reduce_heading(heading - get_heading()); 
         if(turnError > 180) turnError -= 360; 
@@ -208,6 +253,22 @@ void chassis::drive_inches_from_wall(float distance, float heading, Wall wall){
 
     left.stop(brake);
     right.stop(brake); 
+}
+
+void chassis::matchload(float distance, float time){
+    matchload(distance, get_heading(), time); 
+}
+
+void chassis::matchload(float distance, float heading, float time){
+    float prevDriveMaxTime = driveMaxTime;
+    float prevDriveSettleError = driveSettleError;
+    driveMaxTime = time;
+    driveSettleError = -1.f; 
+
+    drive_inches_from_wall(distance, heading, 1);
+
+    driveMaxTime = prevDriveMaxTime; 
+    driveSettleError = prevDriveSettleError; 
 }
 
 void chassis::left_swing_to_angle(float heading){

@@ -23,9 +23,9 @@ motor intakeRight = motor(PORT15, ratio6_1, false);
 
 digital_out scraper = digital_out(Brain.ThreeWirePort.B); 
 digital_out descoreLeft = digital_out(Brain.ThreeWirePort.A); 
-digital_out tripleStateOne = digital_out(Brain.ThreeWirePort.C);
-digital_out tripleStateTwo = digital_out(Brain.ThreeWirePort.D);
-digital_out mid = digital_out(Brain.ThreeWirePort.A);
+// digital_out tripleStateOne = digital_out(Brain.ThreeWirePort.C);
+// digital_out tripleStateTwo = digital_out(Brain.ThreeWirePort.D);
+digital_out mid = digital_out(Brain.ThreeWirePort.C);
 
 digital_out descoreMid = digital_out(Brain.ThreeWirePort.C);
 
@@ -50,7 +50,7 @@ chassis Chassis = chassis(
         Vex Gyroscopes usually consistently drift. So this means that for every rotation it will be some number of degrees off, and that number of degrees is consistent.
         The gyro scale shows how much the the true heading changes every time the gyro reads 360 degrees. It is shown below:
     */
-    351.f,
+    361.3f,
 
     /*
         Wheel Diameter and RPM are below. RPM is calculated by driver/driven * cartridge
@@ -68,9 +68,11 @@ chassis Chassis = chassis(
     // LEFT distance sensor, right distance sensor, front distance sensor, back distance sensor
     vex::distance(PORT1),
     vex::distance(PORT1),
-    vex::distance(PORT19),
-    vex::distance(PORT18)
+    vex::distance(PORT17),
+    vex::distance(PORT16)
 );
 
 bool auto_started = false; 
+float autoBottomIntakeSpeed;
+float autoTopIntakeSpeed; 
 // Motor is PORT, CARTRIDGE (blue is ratio6_1), reversed or not

@@ -25,10 +25,12 @@ extern digital_out descoreLeft;
 extern digital_out mid; 
 extern digital_out descoreMid;
 
-extern digital_out tripleStateOne;
-extern digital_out tripleStateTwo;
+// extern digital_out tripleStateOne;
+// extern digital_out tripleStateTwo;
 
 class chassis; 
 extern chassis Chassis;
 
-extern bool auto_started; 
+extern bool auto_started;
+extern float autoBottomIntakeSpeed;
+extern float autoTopIntakeSpeed; 
