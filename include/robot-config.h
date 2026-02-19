@@ -32,5 +32,6 @@ class chassis;
 extern chassis Chassis;
 
 extern bool auto_started;
+extern int currentAuto; 
 extern float autoBottomIntakeSpeed;
 extern float autoTopIntakeSpeed; 
