@@ -222,7 +222,7 @@ void chassis::drive_inches_from_wall(float distance, int wall)
 }
 
 void chassis::drive_inches_from_wall(float distance, float heading, int wall){
-    pid drivePID = pid(driveP, driveI, driveD, pidUpdateTime, driveMaxTime, driveSettleTime, driveSettleError, driveMaxOutputVolts); 
+    pid drivePID = pid(1.7,0,100, pidUpdateTime, driveMaxTime, driveSettleTime, driveSettleError, driveMaxOutputVolts); 
     pid turnPID = pid(turnP, turnI, turnD, pidUpdateTime, turnMaxTime, turnSettleTime, turnSettleError, turnMaxOutputVolts);
     float currentPosition;
     float driveError, turnError;
@@ -230,12 +230,13 @@ void chassis::drive_inches_from_wall(float distance, float heading, int wall){
 
     heading = reduce_heading(heading); 
 
-    while (!drivePID.settled() || !turnPID.settled())
+    while (!drivePID.settled())
     {
         if (wall == 0){
             currentPosition = backDistance.objectDistance(vex::distanceUnits::in);
         } else if (wall == 1){
             currentPosition = frontDistance.objectDistance(vex::distanceUnits::in);
+
         }
         driveError = (wall == 0) ? distance - currentPosition : currentPosition - distance;
         // driveError = currentPosition - distance; 

@@ -1,5 +1,6 @@
 #include "vex.h"
 
+// rolls over if more than 360
 float reduce_heading(float heading){
     float mod = 360; 
     return heading - floor(heading/mod) * mod; 
