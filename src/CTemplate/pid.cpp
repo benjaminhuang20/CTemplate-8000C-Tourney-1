@@ -28,7 +28,8 @@ void pid::set_settings_constants(float updateTime, float maxOutputVolts){
 
 float pid::compute(float error){
     float proportional = error;
-    float derivitive = (error - prevError) / updateTime;
+    float rawDerivitive = (error - prevError) / updateTime;
+    filteredDerivitive = smoothingStrength * filteredDerivitive + (1.0f - smoothingStrength) * rawDerivitive; //smoothing
 
     errorBuildup += updateTime * (error + prevError) / 2;
     if(errorBuildup > maxOutputVolts){
@@ -40,7 +41,7 @@ float pid::compute(float error){
 
     prevError = error;
 
-    float output = proportional * kP + errorBuildup * kI + derivitive * kD;
+    float output = proportional * kP + errorBuildup * kI + filteredDerivitive * kD;
     if(output > maxOutputVolts){
         output = maxOutputVolts; 
     }

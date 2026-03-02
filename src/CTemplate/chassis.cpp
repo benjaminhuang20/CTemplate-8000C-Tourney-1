@@ -46,6 +46,16 @@ void chassis::set_turn_constants(float turnP, float turnI, float turnD, float tu
     this->turnMaxOutputVolts = turnMaxOutputVolts; 
 }
 
+void chassis::set_distance_constants(float distanceP, float distanceI, float distanceD, float distanceMaxTime, float distanceSettleTime, float distanceSettleError, float distanceMaxOutputVolts){
+    this->distanceP = distanceP;
+    this->distanceI = distanceI;
+    this->distanceD = distanceD;
+    this->distanceMaxTime = distanceMaxTime;
+    this->distanceSettleTime = distanceSettleTime; 
+    this->distanceSettleError = distanceSettleError;
+    this->distanceMaxOutputVolts = distanceMaxOutputVolts; 
+}
+
 float chassis::get_heading(){
     return reduce_heading(gyroscope.rotation() * 360.f / gyroScale); 
 }
@@ -109,7 +119,7 @@ void chassis::drive_inches(float distance, float heading, std::vector<float> com
         turnError = reduce_heading(heading - get_heading()); 
         if(turnError > 180) turnError -= 360; 
 
-        driveVoltage = drivePID.compute(driveError);
+        driveVoltage = clamp(-driveMaxOutputVolts,drivePID.compute(driveError), driveMaxOutputVolts);
         turnVoltage = turnPID.compute(turnError); 
         left.spin(fwd, driveVoltage + turnVoltage, volt);
         right.spin(fwd, driveVoltage - turnVoltage, volt);
@@ -222,7 +232,7 @@ void chassis::drive_inches_from_wall(float distance, int wall)
 }
 
 void chassis::drive_inches_from_wall(float distance, float heading, int wall){
-    pid drivePID = pid(1.7,0,100, pidUpdateTime, driveMaxTime, driveSettleTime, driveSettleError, driveMaxOutputVolts); 
+    pid drivePID = pid(distanceP, distanceI, distanceD, pidUpdateTime, distanceMaxTime, distanceSettleTime, distanceSettleError, distanceMaxOutputVolts);
     pid turnPID = pid(turnP, turnI, turnD, pidUpdateTime, turnMaxTime, turnSettleTime, turnSettleError, turnMaxOutputVolts);
     float currentPosition;
     float driveError, turnError;
@@ -261,15 +271,19 @@ void chassis::matchload(float distance, float time){
 }
 
 void chassis::matchload(float distance, float heading, float time){
-    float prevDriveMaxTime = driveMaxTime;
-    float prevDriveSettleError = driveSettleError;
-    driveMaxTime = time;
-    driveSettleError = -1.f; 
+    float prevDistanceMaxTime = distanceMaxTime;
+    float prevDistanceSettleError = distanceSettleError;
+    float prevDistanceMaxOutputVolts = distanceMaxOutputVolts; 
+
+    distanceMaxTime = time;
+    distanceSettleError = -1.f;
+    distanceMaxOutputVolts = 4.f; 
 
     drive_inches_from_wall(distance, heading, 1);
-
-    driveMaxTime = prevDriveMaxTime; 
-    driveSettleError = prevDriveSettleError; 
+    
+    distanceMaxTime = prevDistanceMaxTime; 
+    distanceSettleError = prevDistanceSettleError;
+    distanceMaxOutputVolts = prevDistanceMaxOutputVolts; 
 }
 
 void chassis::left_swing_to_angle(float heading){

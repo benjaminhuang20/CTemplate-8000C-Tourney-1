@@ -33,6 +33,7 @@ class chassis{
         float driveP, driveI, driveD, driveMaxTime, driveSettleTime, driveSettleError, driveMaxOutputVolts;
         float odomP, odomI, odomD, odomMaxTime, odomSettleTime, odomSettleError, odomMaxOutputVolts; 
         float turnP, turnI, turnD, turnMaxTime, turnSettleTime, turnSettleError, turnMaxOutputVolts;
+        float distanceP, distanceI, distanceD, distanceMaxTime, distanceSettleTime, distanceSettleError, distanceMaxOutputVolts;
 
         float gyroScale;
         float wheelDiameter;
@@ -44,6 +45,8 @@ class chassis{
         void set_drive_constants(float driveP, float driveI, float driveD, float driveMaxTime, float driveSettleTime, float driveSettleError, float driveMaxOutputVolts);
         void set_odom_constants(float odomP, float odomI, float odomD, float odomMaxTime, float odomSettleTime, float odomSettleError, float odomMaxOutputVolts);
         void set_turn_constants(float turnP, float turnI, float turnD, float turnMaxTime, float turnSettleTime, float turnSettleError, float turnMaxOutputVolts);
+        void set_distance_constants(float distanceP, float distanceI, float distanceD, float distanceMaxTime, float distanceSettleTime, float distanceSettleError, float distanceMaxOutputVolts);
+        
         float get_heading();
         void set_heading(float heading); 
         float leftPositionInches();

@@ -122,6 +122,91 @@ int drivePIDTuner(float Pincrement, float Iincrement, int Dincrement){
     return 0; 
 }
 
+int distancePIDTuner(float Pincrement, float Iincrement, int Dincrement){
+    bool toggleA, toggleLeft, toggleRight, toggleUp, toggleDown;
+    int arrowPosition = 2;
+    while (true)
+    {
+        Controller.Screen.clearScreen();
+        Controller.Screen.setCursor(1, 1); 
+        Controller.Screen.print("P : %f", Chassis.distanceP);
+        Controller.Screen.setCursor(2, 1); 
+        Controller.Screen.print("I : %f", Chassis.distanceI);
+        Controller.Screen.setCursor(3, 1); 
+        Controller.Screen.print("D : %f", Chassis.distanceD);
+        Controller.Screen.setCursor(arrowPosition, 15); 
+        Controller.Screen.print("<");
+
+        if(controller(primary).ButtonUp.pressing()){
+            if(toggleUp){
+                toggleUp = false;
+                arrowPosition = clamp(1, arrowPosition - 1, 3); 
+            }
+        } else {
+            toggleUp = true; 
+        }
+
+        if(controller(primary).ButtonDown.pressing()){
+            if(toggleDown){
+                toggleDown = false;
+                arrowPosition = clamp(1, arrowPosition + 1, 3); 
+            }
+        } else {
+            toggleDown = true; 
+        }
+
+        if(controller(primary).ButtonLeft.pressing()){
+            if(toggleLeft){
+                toggleLeft = false;
+                if(arrowPosition == 2){
+                    Chassis.distanceP -= Pincrement; 
+                } else if(arrowPosition == 3){
+                    Chassis.distanceI -= Iincrement; 
+                } else if (arrowPosition == 4){
+                    Chassis.distanceD -= Dincrement;
+                }
+            }
+        } else {
+            toggleLeft = true; 
+        }
+
+        if(controller(primary).ButtonRight.pressing()){
+            if(toggleRight){
+                toggleRight = false;
+                if(arrowPosition == 1){
+                    Chassis.distanceP += Pincrement; 
+                } else if(arrowPosition == 2){
+                    Chassis.distanceI += Iincrement; 
+                } else if (arrowPosition == 3){
+                    Chassis.distanceD+= Dincrement;
+                }
+            }
+        } else {
+            toggleRight = true; 
+        }
+
+        if(controller(primary).ButtonA.pressing()){
+            if(toggleA){
+                toggleA = false;
+                Chassis.drive_inches_from_wall(36, 1); 
+                Chassis.drive_inches_from_wall(24,1); 
+                Chassis.drive_inches_from_wall(6,1); 
+                // Chassis.drive_inches_from_wall(-6,1);
+
+                Chassis.drive_inches_from_wall(36,1); 
+                Chassis.drive_inches_from_wall(6,1); 
+                Chassis.drive_inches_from_wall(36,1); 
+            }
+        } else {
+            toggleA = true; 
+        }
+        wait(10, msec); 
+    }
+
+    return 0; 
+}
+
+
 int headingPIDTuner(float Pincrement, float Iincrement, int Dincrement){
     bool toggleA, toggleLeft, toggleRight, toggleUp, toggleDown;
     int arrowPosition = 2;
