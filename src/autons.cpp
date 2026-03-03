@@ -87,6 +87,9 @@ void soloAWP_PUSH(){
     Chassis.drive_inches(8);
     Chassis.turn_to_angle(0.0);
     Chassis.driveMaxTime = 1000;
+    Chassis.driveMaxOutputVolts = 8;
+    Chassis.left.setStopping(vex::brakeType::coast);
+    Chassis.right.setStopping(vex::brakeType::coast);
     Chassis.drive_inches(-50.0);
 
     Chassis.driveMaxTime = 800;
@@ -95,18 +98,21 @@ void soloAWP_PUSH(){
     scraper = true;
     Chassis.driveMaxTime = 1000;
     Chassis.driveSettleTime = 800;
-    Chassis.drive_inches_from_wall(16.5, 0);
+    Chassis.drive_inches_from_wall(16, 0);
     Chassis.driveMaxTime = 800;
     Chassis.driveSettleTime = 500;
     Chassis.turnSettleTime = 400;
     Chassis.turn_to_angle(-90);
     autoBottomIntakeSpeed = 120.f;
     Chassis.driveMaxOutputVolts = 5;
-    Chassis.matchload(11.2, -90, 700);
+    Chassis.driveSettleTime = 1500;
+    Chassis.driveMaxOutputVolts = 12;
+    Chassis.matchload(10.6, -90, 750);
     Chassis.turn_to_angle(-90);
 
 
     Chassis.driveMaxOutputVolts = 12;
+    Chassis.driveMaxTime = 650;
     Chassis.drive_inches(-30.0);
     Chassis.driveMaxTime = 800;
     autoTopIntakeSpeed = 120.f;
@@ -122,25 +128,34 @@ void soloAWP_PUSH(){
     Chassis.driveMaxOutputVolts = 10;
     Chassis.driveMaxTime = 1100;
     Chassis.drive_inches(54.5,0);
+    scraper = true;
     Chassis.turn_to_angle(-45);
-    Chassis.driveMaxTime = 1000;
-    Chassis.drive_inches(-12,-45);
+    Chassis.driveMaxTime = 800;
+    Chassis.drive_inches(-17,-45);
     autoBottomIntakeSpeed = -120.f;
     wait(0.1,sec);
     autoBottomIntakeSpeed = 120.f;
 
-    autoTopIntakeSpeed = -6.f;
+    autoTopIntakeSpeed = -12.f;
+    autoBottomIntakeSpeed = -12.f;
     mid = true;
-    wait(1,sec);
+    wait(0.2, sec);
+    autoBottomIntakeSpeed = 120.f;
+    wait(0.8, sec);
+    autoBottomIntakeSpeed = 0.f;
     mid = false;
+    autoBottomIntakeSpeed = 120.f;
 
     Chassis.driveMaxTime = 1300;
     Chassis.driveMaxOutputVolts = 12;
-    Chassis.drive_inches(51,-45);
+    Chassis.drive_inches(54.5,-45);
     Chassis.turn_to_angle(-90);
+    Chassis.driveSettleTime = 1500;
+    Chassis.driveMaxOutputVolts = 12;
+    Chassis.matchload(10.6, -90, 750);
     Chassis.driveMaxOutputVolts = 10;
     Chassis.driveMaxTime = 1000;
-    Chassis.drive_inches(-25,-90);
+    Chassis.drive_inches(-35,-90);
 
     autoTopIntakeSpeed = 120.f;
 }

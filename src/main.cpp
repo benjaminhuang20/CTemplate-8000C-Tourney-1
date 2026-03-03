@@ -64,7 +64,7 @@ void pre_auton(){ //set things like if pneumatics start actuated or not here and
   // float driveP, float driveI, float driveD, float driveMaxTime, float driveSettleTime, float driveSettleError, float driveMaxOutputVolts
   Chassis.set_drive_constants(2,0,100,5000,100,0.5,10);
   Chassis.set_turn_constants(0.415, 0.03, 30, 2000, 100, 2, 12);
-  Chassis.set_distance_constants(2,0,120,5000,100,0.5,8);
+  Chassis.set_distance_constants(1.2,0,45,5000,100,0.5,4.5);
   Chassis.pidUpdateTime = 10;
   
   bool toggleUp = true, toggleDown = true; 
@@ -128,11 +128,11 @@ void auton(){
   //right7ball();
   //right9ball();
   //right4ball();
-  //soloAWP_PUSH();
+  soloAWP_PUSH();
   // SkillsControlMiddle();
   //score();
   // skills();
-  clearPark();
+  //clearPark();
   // Chassis.set_heading(-135);
   // Chassis.turn_to_angle(-130);
   // Chassis.turnMaxOutputVolts = 0.5;
