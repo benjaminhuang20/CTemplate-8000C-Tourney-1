@@ -4,7 +4,7 @@
 double matchLoaderDistance = 11.5; 
 
 int bottomAntiJam(){
-    while(auto_started){
+    while(auto_started==1){
         double voltage = intakeLeft.voltage(vex::voltageUnits::volt);
         double efficiency = intakeLeft.efficiency(); 
 
@@ -21,7 +21,7 @@ int bottomAntiJam(){
 }
 
 int topAntiJam(){
-    while(auto_started){
+    while(auto_started==1){
         double voltage = intakeRight.voltage(vex::voltageUnits::volt);
         double efficiency = intakeRight.efficiency(); 
 
@@ -241,7 +241,7 @@ void skills(){
     Chassis.driveMaxOutputVolts = 6.f; 
 
     // Chassis.drive_inches_from_wall(24.f,0);
-    Chassis.turn_to_angle(-15);
+    Chassis.turn_to_angle(-20);
     Chassis.drive_inches(28.f, Chassis.get_heading(), {10, 24}, {[](void)
                                                                     { Chassis.driveMaxOutputVolts = 3.f;}, [](void)
                                                                     { scraper = true; }});
@@ -267,7 +267,7 @@ void skills(){
     Chassis.driveMaxTime = 5000;
     // Chassis.drive_inches(49.5);
     Chassis.driveSettleTime = 300; 
-    Chassis.drive_inches(50);
+    Chassis.drive_inches(51.5);
     Chassis.driveSettleTime = 100; 
     Chassis.turn_to_angle(180);
     Chassis.driveMaxTime = 500; 
@@ -282,7 +282,7 @@ void skills(){
     Chassis.matchload(11.1, -180, 2900);
 
     RBCrossover();
-    
+    clearPark();
 }
 
 void rightSplit(){

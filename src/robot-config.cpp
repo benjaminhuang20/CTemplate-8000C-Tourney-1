@@ -73,8 +73,10 @@ chassis Chassis = chassis(
     vex::distance(PORT11) //B
 );
 
-bool auto_started = false; 
-int currentAuto = 0; 
+// char *autoNames[] = {"Skills", "AWP", "john Noah","a4","a5","a6","a7","a8"};
+int auto_started = 0;
+bool allow_selector = true;
+int currentAuto = 0;
 float autoBottomIntakeSpeed;
 float autoTopIntakeSpeed; 
 // Motor is PORT, CARTRIDGE (blue is ratio6_1), reversed or not

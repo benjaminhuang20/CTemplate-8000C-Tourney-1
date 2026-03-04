@@ -20,7 +20,7 @@ class pid{
         float errorBuildup = 0;
 
         float filteredDerivitive = 0;
-        float smoothingStrength = 0.9f; 
+        float smoothingStrength = 0.0f; 
         // float
 
         pid(float kP, float kI, float kD, float updateTime, float maxTime, float settleTime, float settleError, float maxOutputVolts);
