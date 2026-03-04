@@ -1,23 +1,27 @@
 #pragma once
 
 void test();
-void right4Ball();
-void rightLowerGoal();
 void skills();
 void RBCrossover();
 void score();
 void clearPark(); 
+void SkillsControlMiddle();
 
+//solo
 void soloAWP_PUSH();
-void soloAWP();
 
-
+//right
 void rightSplit();
 void right9ball();
 void right7ball();
-void right4ball();
+void right4ballcorner();
+void right4ballmatchload();
+void right10ball();
 
+//left
+void leftSplit();
+void left9ball();
+void left7ball();
+void left4ballcorner();
+void left4ballmatchload();
 
-void SkillsControlMiddle();
-
-void skillsNEW();

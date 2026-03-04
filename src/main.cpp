@@ -40,7 +40,7 @@ int uiMode = 0;
 using namespace vex;
 
 
-char *autoNames[] = {"Skills", "AWP", "john Noah","a4","a5","a6","a7","a8"};
+char *autoNames[] = {"4B_Corner", "4b_Matchload", "7B","7b_Split","9B","10B","Solo_AWP","Skills"};
 
 void printAutonSelector(){
   Controller.Screen.clearScreen();
@@ -143,68 +143,24 @@ void pre_auton()
 void auton()
 {
   auto_started = 1;
-  // rightSplit();
-  // right7ball();
-  // right9ball();
-  // right4ball();
-  //  soloAWP_PUSH();
-  //  Chassis.turn_to_angle(90);
-  //  Chassis.turn_to_angle(180);
-  //  Chassis.turn_to_angle(270);
-  //  Chassis.turn_to_angle(0);
-
-  // Chassis.turn_to_angle(45);
-  // Chassis.turn_to_angle(90);
-  // Chassis.turn_to_angle(180);
-  // Chassis.turn_to_angle(90);
-  // Chassis.turn_to_angle(45);
-  // Chassis.turn_to_angle(0);
-
-  // for (int i = 0; i < 720; i += 10)
-  // {
-  //   Chassis.turn_to_angle(i);
-  // }
-
-  // SkillsControlMiddle();
-  // score();
-  // skills();
-  // clearPark();
-  // Chassis.set_heading(-135);
-  // Chassis.turn_to_angle(-130);
-  // Chassis.turnMaxOutputVolts = 0.5;
-  // Chassis.drive_inches(50);
-  // Chassis.driveSettleTime = 300;
-  // Chassis.turnMaxOutputVolts = 12;
-  // Chassis.turn_to_angle(180);
-  //  Chassis.set_heading(180);
-  //  Chassis.matchload(11.5, -180, 5000);
-  //  RBCrossover();
-  //  Chassis.drive_inches_from_wall(17,0);
-  //  Chassis.turn_to_angle(-90);
-
   switch(currentAuto){
     case(0):
-      skills();
+      right4ballcorner();
     case(1):
-      skills();
+      right4ballmatchload();
     case(2):
-      skills();
+      right7ball();
     case(3):
-      skills();
+      rightSplit();
     case(4):
-      skills();
+      right9ball();
     case(5):
-      skills();
+      right10ball();
     case(6):
-      skills();
+      soloAWP_PUSH();
     case(7):
       skills();
   }
-}
-
-
-void yousuck()
-{
 }
 
 void usercontrol()

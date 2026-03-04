@@ -23,8 +23,6 @@ motor intakeRight = motor(PORT20, ratio6_1, false);
 
 digital_out scraper = digital_out(Brain.ThreeWirePort.C); 
 digital_out descoreLeft = digital_out(Brain.ThreeWirePort.A); 
-// digital_out tripleStateOne = digital_out(Brain.ThreeWirePort.C);
-// digital_out tripleStateTwo = digital_out(Brain.ThreeWirePort.D);
 digital_out mid = digital_out(Brain.ThreeWirePort.B);
 
 //swap if not work
@@ -76,7 +74,7 @@ chassis Chassis = chassis(
 // char *autoNames[] = {"Skills", "AWP", "john Noah","a4","a5","a6","a7","a8"};
 int auto_started = 0;
 bool allow_selector = true;
-int currentAuto = 0;
+int currentAuto = 2;
 float autoBottomIntakeSpeed;
 float autoTopIntakeSpeed; 
 // Motor is PORT, CARTRIDGE (blue is ratio6_1), reversed or not
