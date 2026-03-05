@@ -324,3 +324,29 @@ void drawLogo() {
         }
     }
 }
+
+float getDrivePower(motor check)
+{
+  int temp = (int)(check.temperature(vex::temperatureUnits::celsius));
+
+  if (temp >= 70)
+  {
+    return 0.f;
+  }
+  else if (temp >= 65)
+  {
+    return 0.125;
+  }
+  else if (temp >= 60)
+  {
+    return 0.25;
+  }
+  else if (temp >= 55)
+  {
+    return 0.5;
+  }
+  else
+  {
+    return 1.f;
+  }
+}

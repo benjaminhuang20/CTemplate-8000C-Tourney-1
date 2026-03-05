@@ -1,6 +1,8 @@
 #pragma once
 
 void test();
+void drive_test(); 
+void turn_test();
 void skills();
 void RBCrossover();
 void score();

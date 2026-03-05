@@ -71,7 +71,6 @@ chassis Chassis = chassis(
     vex::distance(PORT11) //B
 );
 
-// char *autoNames[] = {"Skills", "AWP", "john Noah","a4","a5","a6","a7","a8"};
 int auto_started = 0;
 bool allow_selector = true;
 int currentAuto = 2;

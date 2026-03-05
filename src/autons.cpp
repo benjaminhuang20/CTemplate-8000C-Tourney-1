@@ -37,12 +37,32 @@ int topAntiJam(){
     return 0; 
 }
 
-void test(){
-    scraper = true; 
-    vex::task antiJam = vex::task(bottomAntiJam); 
-    Chassis.drive_inches_from_wall(12, 1);
-    // Chassis.drive_inches(-10);
-    // Chassis.drive_inches(10, 50);
+void drive_test(){
+    Chassis.drive_inches(24); //testing big and small drives
+    Chassis.drive_inches(-24); 
+    Chassis.drive_inches(12); 
+    Chassis.drive_inches(12); 
+    Chassis.drive_inches(-8); 
+    Chassis.drive_inches(-4); 
+    Chassis.drive_inches(-4);
+    Chassis.drive_inches(-2); 
+    Chassis.drive_inches(-2);
+    Chassis.drive_inches(-1);
+    Chassis.drive_inches(-1);
+    Chassis.drive_inches(-1);
+    Chassis.drive_inches(-1);
+}
+
+void turn_test(){
+    Chassis.turn_to_angle(45); //testing how fast fast turns are
+    Chassis.turn_to_angle(90);
+    Chassis.turn_to_angle(135);
+    Chassis.turn_to_angle(180);
+    Chassis.turn_to_angle(0);
+
+    for (int i = 0; i < 720; i+=10){ //testing how fast small turns are
+        Chassis.turn_to_angle(i); 
+    }
 }
 
 void soloAWP_PUSH(){

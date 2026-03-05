@@ -6,39 +6,10 @@
 /*    Description:  V5 project                                                */
 /*                                                                            */
 /*----------------------------------------------------------------------------*/
+
 #include "vex.h"
 
-float getDrivePower(motor check)
-{
-  int temp = (int)(check.temperature(vex::temperatureUnits::celsius));
-
-  if (temp >= 70)
-  {
-    return 0.f;
-  }
-  else if (temp >= 65)
-  {
-    return 0.125;
-  }
-  else if (temp >= 60)
-  {
-    return 0.25;
-  }
-  else if (temp >= 55)
-  {
-    return 0.5;
-  }
-  else
-  {
-    return 1.f;
-  }
-}
-// int batteryLock = 0;
-int uiMode = 0;
-// 0 = generic
-
 using namespace vex;
-
 
 char *autoNames[] = {"4B_Corner", "4b_Matchload", "7B","7b_Split","9B","10B","Solo_AWP","Skills"};
 
@@ -52,14 +23,11 @@ void printAutonSelector(){
     }
 }
 
-int runs = 0;
 void pre_auton()
 { // set things like if pneumatics start actuated or not here and any variables that have to start at a certain position
-  // float driveP, float driveI, float driveD, float driveMaxTime, float driveSettleTime, float driveSettleError, float driveMaxOutputVolts
-  // auto_started = false;
-  
+  auto_started = 0; 
+
   Chassis.set_drive_constants(2, 0, 100, 5000, 100, 0.5, 10);
-  // Chassis.set_turn_constants(0.225, 0.00, 16.5, 2000, 100, 2, 12);
   Chassis.set_turn_constants(0.45, 0.02, 32, 2000, 100, 2, 12);
   Chassis.set_distance_constants(1.2, 0, 45, 5000, 100, 0.5, 4.5);
   Chassis.pidUpdateTime = 10;
@@ -67,14 +35,9 @@ void pre_auton()
   bool toggleUp = true, toggleDown = true;
   descoreLeft = false;
   drawLogo();
- 
-
-  
   printAutonSelector();
   while (allow_selector == true)
   {
-   
-
     if (controller(primary).ButtonUp.pressing())
     {
       if (toggleUp)
@@ -114,6 +77,8 @@ void pre_auton()
     wait(10, msec);
   }
 
+  //once the allow_selector variable is turned to false, it will return these quality of life values onto the screen. (Battery, Motor power)
+
   while(true){
     Controller.Screen.clearScreen();
 
@@ -136,8 +101,6 @@ void pre_auton()
                                     100 / 2));
       wait(200, msec);
   }
-
-  // Chassis.set_turn_constants(.07, .15, 0, 5000, 150, 2,12);
 }
 
 void auton()
@@ -165,10 +128,7 @@ void auton()
 
 void usercontrol()
 {
-  // drawLogo();
   auto_started = 2;
-  // drivePIDTuner(0.1, 0.01, 1);
-  // headingPIDTuner(0.1, 0.01, 1);
 
   int storing = 0;
   float intakeSpeed = 120.f;
@@ -179,11 +139,6 @@ void usercontrol()
 
   while (true)
   {
-    if (!allow_selector && refreshTimer % 200 == 0)
-    {
-    
-    }
-
     Chassis.arcade(12.f, 12.f);
     intakeLeft.spin(fwd, intakeSpeed * (controller(primary).ButtonL1.pressing() - controller(primary).ButtonR1.pressing()), volt);
     if (storing == 0)
@@ -243,66 +198,20 @@ void usercontrol()
       
     }
 
-    // if(controller(primary).ButtonY.pressing()){
-    //     if(toggleY){
-    //       descoreMid = !descoreMid;
-    //       toggleY= false;
-    //     }
-    // } else{
-    //   toggleY = true;
-    // }
-
     if (controller(primary).ButtonA.pressing())
     {
       mid = true;
       storing = 0;
       intakeSpeed = 12.f;
-      // it was 10 before if u wanna change it back
       storingSpeed = 6;
-      // toggleA = false;
-      // if(toggleA){
-      //   mid = !mid;
-      //   storing = 0;
-      //   toggleA = false;
-      // }
     }
     else
     {
       mid = false;
       intakeSpeed = 120.f;
       storingSpeed = 3;
-      // storing = 1;
-      // toggleA = true;
     }
 
-    // if(controller(primary).ButtonA.pressing()){
-    //     if(toggleA){
-    //       if (storing == 0){ //long
-    //         storing = 2;
-    //         intakeSpeed = 120.f;
-    //         tripleStateOne = true;
-    //         tripleStateTwo = true;
-    //       }
-    //       else if (storing == 1) //storing goes to long
-    //       {
-    //         storing = 2;
-    //         intakeSpeed = 120.f;
-    //         tripleStateOne = true;
-    //         tripleStateTwo = true;
-    //       }
-    //       else if (storing == 2)
-    //       { // middle
-    //         storing = 0;
-    //         intakeSpeed = 120.f;
-    //         tripleStateOne = false; // middle triple state
-    //         tripleStateTwo = false;
-    //       }
-
-    //       toggleA= false;
-    //     }
-    // } else{
-    //   toggleA = true;
-    // }
     wait(10, msec);
     refreshTimer += 10; 
   }
@@ -312,10 +221,7 @@ int main()
 {
   // Set up callbacks for autonomous and driver control periods.
   Competition.autonomous(auton);
-  // Competition.drivercontrol(yousuck);
-
   Competition.drivercontrol(usercontrol);
-  // Competition.drivercontrol(drivePIDTuner);
 
   // Run the pre-autonomous function.
   pre_auton();

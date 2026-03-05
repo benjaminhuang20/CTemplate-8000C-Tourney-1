@@ -25,13 +25,9 @@ extern digital_out descoreLeft;
 extern digital_out mid;
 extern digital_out descoreMid;
 
-// extern digital_out tripleStateOne;
-// extern digital_out tripleStateTwo;
-
 class chassis;
 extern chassis Chassis;
 
-// extern char *autoNames[];
 extern int auto_started;
 extern bool allow_selector;
 extern int currentAuto;

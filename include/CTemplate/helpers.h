@@ -8,3 +8,4 @@ int headingPIDTuner(float Pincrement, float Iincrement, int Dincrement);
 int drivePIDTuner(float Pincrement, float Iincrement, int Dincrement);
 int distancePIDTuner(float Pincrement, float Iincrement, int Dincrement);
 void drawLogo();
+float getDrivePower(motor check);
