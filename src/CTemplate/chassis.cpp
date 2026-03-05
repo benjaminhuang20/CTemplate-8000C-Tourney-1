@@ -188,44 +188,6 @@ void chassis::turn_to_angle(float heading){
     right.stop(brake); 
 }
 
-// void chassis::drive_inches_from_wall(float distance, Wall wall){
-//     drive_inches_from_wall(distance, get_heading(), wall); 
-// }
-
-// void chassis::drive_inches_from_wall(float distance, float heading, Wall wall){
-//     pid drivePID = pid(driveP, driveI, driveD, pidUpdateTime, driveMaxTime, driveSettleTime, driveSettleError, driveMaxOutputVolts); 
-//     pid turnPID = pid(turnP, turnI, turnD, pidUpdateTime, turnMaxTime, turnSettleTime, turnSettleError, turnMaxOutputVolts);
-//     float currentPosition;
-//     float driveError, turnError;
-//     float driveVoltage, turnVoltage; 
-
-//     heading = reduce_heading(heading); 
-
-//     while (!drivePID.settled() || !turnPID.settled())
-//     {
-//         if (wall == BACK_WALL){
-//             currentPosition = backDistance.objectDistance(vex::distanceUnits::in);
-//         } else if (wall == FRONT_WALL){
-//             currentPosition = frontDistance.objectDistance(vex::distanceUnits::in);
-//         }
-//         driveError = (wall == BACK_WALL) ? distance - currentPosition : currentPosition - distance;
-//         // driveError = currentPosition - distance; 
-
-//         turnError = reduce_heading(heading - get_heading()); 
-//         if(turnError > 180) turnError -= 360; 
-
-//         driveVoltage = drivePID.compute(driveError);
-//         turnVoltage = turnPID.compute(turnError); 
-//         left.spin(fwd, driveVoltage + turnVoltage, volt);
-//         right.spin(fwd, driveVoltage - turnVoltage, volt);
-
-//         wait(pidUpdateTime, msec); 
-//     }
-
-//     left.stop(brake);
-//     right.stop(brake); 
-// }
-
 void chassis::drive_inches_from_wall(float distance, int wall)
 { // 0 is back wall 1 is front wall
     drive_inches_from_wall(distance, get_heading(), wall);
