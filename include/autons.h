@@ -10,6 +10,8 @@ void score();
 void clearPark(); 
 void SkillsControlMiddle();
 
+void Push();
+
 //solo
 void soloAWP_PUSH();
 
