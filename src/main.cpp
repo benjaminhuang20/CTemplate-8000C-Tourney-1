@@ -141,11 +141,17 @@ void auton()
   //   case(8):
   //     worseSkills();
   //   }
-    clearPark();
+    // clearPark();
 
-    Chassis.drive_inches_from_wall(30,90,1);
-    Chassis.turn_to_angle(180);
-    Chassis.drive_inches_from_wall(30,180,0);
+  Chassis.set_heading(90);
+  Chassis.drive_inches_from_wall(50, 90, 1);
+  Chassis.turn_to_angle(180);
+  Chassis.drive_inches_from_wall(45, 180, 0);
+  Chassis.turn_to_angle(45);
+  Chassis.driveMaxOutputVolts = 6;
+  Chassis.driveMaxTime = 750;
+  Chassis.drive_inches(-20);
+  
 }
 
 void usercontrol()

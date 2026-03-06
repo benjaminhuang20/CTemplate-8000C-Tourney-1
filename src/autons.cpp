@@ -214,7 +214,7 @@ void clearPark(){
 
     autoBottomIntakeSpeed = 120.f;
     
-    Chassis.drive_inches(50, 80,
+    Chassis.drive_inches(50, 85,
                          {18}, {[](void)
                                 { scraper = true; }});
 }
@@ -272,9 +272,13 @@ void skills(){
     RBCrossover();
     clearPark();
 
-    Chassis.drive_inches_from_wall(30,90,1);
+    Chassis.drive_inches_from_wall(50, 90, 1);
     Chassis.turn_to_angle(180);
-    Chassis.drive_inches_from_wall(30,90,0);
+    Chassis.drive_inches_from_wall(45, 180, 0);
+    Chassis.turn_to_angle(45);
+    Chassis.driveMaxOutputVolts = 6;
+    Chassis.driveMaxTime = 750;
+    Chassis.drive_inches(-20);
 }
 
 void worseSkills(){
