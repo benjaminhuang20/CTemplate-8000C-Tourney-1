@@ -73,7 +73,8 @@ chassis Chassis = chassis(
 
 int auto_started = 0;
 bool allow_selector = true;
-int currentAuto = 2;
+int currentAuto =7;
+int currentSide = 0;
 float autoBottomIntakeSpeed;
 float autoTopIntakeSpeed; 
 // Motor is PORT, CARTRIDGE (blue is ratio6_1), reversed or not

@@ -11,7 +11,7 @@
 
 using namespace vex;
 
-char *autoNames[] = {"4B_Corner", "4b_Matchload", "7B","7b_Split","9B","10B","Solo_AWP","Skills"};
+char *autoNames[2][8] = {{"4B_Corner", "4b_Matchload", "7B","7b_Split","9B","10B","Solo_AWP","Skills"},{"L1", "L2", "L3","L4","L5","L6","L7","L8"}};
 
 void printAutonSelector(){
   Controller.Screen.clearScreen();
@@ -19,22 +19,24 @@ void printAutonSelector(){
     Controller.Screen.print("Press L2 to drive");
     Controller.Screen.setCursor(2, 1);
     if(currentAuto >= 0 && currentAuto <= 7){
-    Controller.Screen.print("Auto: %s", autoNames[currentAuto]);
+    Controller.Screen.print("Auto: %s", autoNames[currentAuto][currentSide]);
     }
 }
 
+int runs = 0;
 void pre_auton()
 { // set things like if pneumatics start actuated or not here and any variables that have to start at a certain position
-  auto_started = 0; 
-
-  Chassis.set_drive_constants(2, 0, 100, 5000, 100, 0.5, 10);
-  Chassis.set_turn_constants(0.45, 0.02, 32, 2000, 100, 2, 12);
-  Chassis.set_distance_constants(1.2, 0, 45, 5000, 100, 0.5, 4.5);
+  Chassis.set_drive_constants(2, 0, 100, 5000, 100, 0.5, 10); 
+  Chassis.set_turn_constants(0.49, 0.02, 32, 1500, 100, 2, 12);
+  // Chassis.set_distance_constants(1.2, 0, 45, 5000, 100, 0.5, 4.5);
+  // Chassis.set_distance_constants(1.2, 0, 45, 5000, 300, 0.5, 10);
+  Chassis.set_distance_constants(2, 0, 100, 5000, 100, 0.5, 10); 
   Chassis.pidUpdateTime = 10;
 
   bool toggleUp = true, toggleDown = true;
   descoreLeft = false;
   drawLogo();
+
   printAutonSelector();
   while (allow_selector == true)
   {
@@ -72,8 +74,19 @@ void pre_auton()
     {
       allow_selector = false;
       break;
-        }
-
+    } 
+    
+    if (controller(primary).ButtonRight.pressing())
+    {
+        currentSide = 1;
+        printAutonSelector();
+    }
+    if (controller(primary).ButtonLeft.pressing())
+    {
+        currentSide = 0;
+        printAutonSelector();
+    }
+      
     wait(10, msec);
   }
 
@@ -101,29 +114,38 @@ void pre_auton()
                                     100 / 2));
       wait(200, msec);
   }
+
+  // Chassis.set_turn_constants(.07, .15, 0, 5000, 150, 2,12);
 }
 
 void auton()
 {
   auto_started = 1;
-  switch(currentAuto){
-    case(0):
-      right4ballcorner();
-    case(1):
-      right4ballmatchload();
-    case(2):
-      right7ball();
-    case(3):
-      rightSplit();
-    case(4):
-      right9ball();
-    case(5):
-      right10ball();
-    case(6):
-      soloAWP_PUSH();
-    case(7):
-      skills();
-  }
+  // switch(currentAuto){
+  //   case(0):
+  //     right4ballcorner();
+  //   case(1):
+  //     right4ballmatchload();
+  //   case(2):
+  //     right7ball();
+  //   case(3):
+  //     rightSplit();
+  //   case(4):
+  //     right9ball();
+  //   case(5):
+  //     right10ball();
+  //   case(6):
+  //     soloAWP_PUSH();
+  //   case(7):
+  //     skills();
+  //   case(8):
+  //     worseSkills();
+  //   }
+    clearPark();
+
+    Chassis.drive_inches_from_wall(30,90,1);
+    Chassis.turn_to_angle(180);
+    Chassis.drive_inches_from_wall(30,180,0);
 }
 
 void usercontrol()

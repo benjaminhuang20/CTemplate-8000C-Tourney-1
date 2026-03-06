@@ -4,6 +4,7 @@ void test();
 void drive_test(); 
 void turn_test();
 void skills();
+void worseSkills();
 void RBCrossover();
 void score();
 void clearPark(); 

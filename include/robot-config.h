@@ -31,5 +31,6 @@ extern chassis Chassis;
 extern int auto_started;
 extern bool allow_selector;
 extern int currentAuto;
+extern int currentSide; 
 extern float autoBottomIntakeSpeed;
 extern float autoTopIntakeSpeed;
