@@ -21,16 +21,20 @@ void printAutonSelector(){
     if(currentAuto >= 0 && currentAuto <= 7){
     Controller.Screen.print("Auto: %s", autoNames[currentAuto][currentSide]);
     }
+    Controller.Screen.setCursor(3, 1);
+    Controller.Screen.print("Heading: %f", Chassis.get_heading());
 }
 
 int runs = 0;
 void pre_auton()
 { // set things like if pneumatics start actuated or not here and any variables that have to start at a certain position
   Chassis.set_drive_constants(2, 0, 100, 5000, 100, 0.5, 10); 
-  Chassis.set_turn_constants(0.49, 0.02, 32, 1500, 100, 2, 12);
+  // Chassis.set_turn_constants(0.45, 0.02, 60, 1000, 100, 2, 10);
+  Chassis.set_turn_constants(0.40, 0.02, 35, 1000, 100, 2, 10);
+  // Chassis.set_turn_constants(0.47, 0.02, 40, 1500, 100, 2, 12);
   // Chassis.set_distance_constants(1.2, 0, 45, 5000, 100, 0.5, 4.5);
   // Chassis.set_distance_constants(1.2, 0, 45, 5000, 300, 0.5, 10);
-  Chassis.set_distance_constants(2, 0, 100, 5000, 100, 0.5, 10); 
+  Chassis.set_distance_constants(2, 0, 100, 5000, 300, 0.3, 6); 
   Chassis.pidUpdateTime = 10;
 
   bool toggleUp = true, toggleDown = true;
@@ -120,38 +124,42 @@ void pre_auton()
 
 void auton()
 {
+  // void rightSplit
   auto_started = 1;
-  // switch(currentAuto){
-  //   case(0):
-  //     right4ballcorner();
-  //   case(1):
-  //     right4ballmatchload();
-  //   case(2):
-  //     right7ball();
-  //   case(3):
-  //     rightSplit();
-  //   case(4):
-  //     right9ball();
-  //   case(5):
-  //     right10ball();
-  //   case(6):
-  //     soloAWP_PUSH();
-  //   case(7):
-  //     skills();
-  //   case(8):
-  //     worseSkills();
-  //   }
-    // clearPark();
-
-  Chassis.set_heading(90);
-  Chassis.drive_inches_from_wall(50, 90, 1);
-  Chassis.turn_to_angle(180);
-  Chassis.drive_inches_from_wall(45, 180, 0);
-  Chassis.turn_to_angle(45);
-  Chassis.driveMaxOutputVolts = 6;
-  Chassis.driveMaxTime = 750;
-  Chassis.drive_inches(-20);
-  
+  switch(currentAuto){
+    case(0):
+      right4ballcorner();
+      break;
+    case (1):
+      right4ballmatchload();
+      break;
+    case (2):
+      right7ball();
+      break;
+    case (3):
+      rightSplit();
+      break;
+    case (4):
+      right9ball();
+      break;
+    case (5):
+      right10ball();
+      break;
+    case (6):
+      soloAWP_PUSH();
+      break;
+    case (7):
+      // turn_test();
+      worseSkills();
+      // Chassis.set_heading(180);
+      // RBCrossover();
+      // Chassis.drive_inches_from_wall(18.25, 0, 0);
+      // Chassis.turn_to_angle(-90);
+      break;
+    case (8):
+      test();
+      break;
+    }
 }
 
 void usercontrol()
@@ -230,7 +238,7 @@ void usercontrol()
     {
       mid = true;
       storing = 0;
-      intakeSpeed = 12.f;
+      intakeSpeed = 10.f;
       storingSpeed = 6;
     }
     else

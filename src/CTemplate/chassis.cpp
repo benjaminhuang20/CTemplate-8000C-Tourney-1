@@ -239,7 +239,7 @@ void chassis::matchload(float distance, float heading, float time){
 
     distanceMaxTime = time;
     distanceSettleError = -1.f;
-    distanceMaxOutputVolts = 4.f; 
+    distanceMaxOutputVolts = 6.f; 
 
     drive_inches_from_wall(distance, heading, 1);
     

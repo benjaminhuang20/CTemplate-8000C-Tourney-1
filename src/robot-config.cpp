@@ -49,7 +49,7 @@ chassis Chassis = chassis(
         Vex Gyroscopes usually consistently drift. So this means that for every rotation it will be some number of degrees off, and that number of degrees is consistent.
         The gyro scale shows how much the the true heading changes every time the gyro reads 360 degrees. It is shown below:
     */
-    351.0f,
+    352.8f,
 
     /*
         Wheel Diameter and RPM are below. RPM is calculated by driver/driven * cartridge

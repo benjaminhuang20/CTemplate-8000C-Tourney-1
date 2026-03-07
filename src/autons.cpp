@@ -1,43 +1,54 @@
 #include "vex.h"
 #include <chrono>
 
-double matchLoaderDistance = 11.5; 
+double matchLoaderDistance = 11.5;
 
-int bottomAntiJam(){
-    while(auto_started==1){
+int bottomAntiJam()
+{
+    while (auto_started == 1)
+    {
         double voltage = intakeLeft.voltage(vex::voltageUnits::volt);
-        double efficiency = intakeLeft.efficiency(); 
+        double efficiency = intakeLeft.efficiency();
 
-        if(fabs(voltage) > 0 && efficiency < 5){
-            intakeLeft.spin(vex::directionType::fwd, autoBottomIntakeSpeed, vex::voltageUnits::volt); 
-        } else{
+        if (fabs(voltage) > 0 && efficiency < 5)
+        {
+            intakeLeft.spin(vex::directionType::fwd, autoBottomIntakeSpeed, vex::voltageUnits::volt);
+        }
+        else
+        {
             intakeLeft.spin(vex::directionType::rev, autoBottomIntakeSpeed, vex::voltageUnits::volt);
         }
 
-        wait(0.2, sec); 
+        wait(0.2, sec);
     }
 
-    return 0; 
+    return 0;
 }
 
-int topAntiJam(){
-    while(auto_started==1){
+int topAntiJam()
+{
+    while (auto_started == 1)
+    {
         double voltage = intakeRight.voltage(vex::voltageUnits::volt);
-        double efficiency = intakeRight.efficiency(); 
+        double efficiency = intakeRight.efficiency();
 
-        if(fabs(voltage) > 0 && efficiency < 5){
-            intakeRight.spin(vex::directionType::fwd, autoTopIntakeSpeed, vex::voltageUnits::volt); 
-        } else{
-            intakeRight.spin(vex::directionType::rev, autoTopIntakeSpeed, vex::voltageUnits::volt); 
+        if (fabs(voltage) > 0 && efficiency < 5)
+        {
+            intakeRight.spin(vex::directionType::fwd, autoTopIntakeSpeed, vex::voltageUnits::volt);
+        }
+        else
+        {
+            intakeRight.spin(vex::directionType::rev, autoTopIntakeSpeed, vex::voltageUnits::volt);
         }
 
-        wait(0.2, sec); 
+        wait(0.2, sec);
     }
 
-    return 0; 
+    return 0;
 }
 
-void Push(){
+void Push()
+{
     Chassis.set_heading(180);
     Chassis.turn_to_angle(60);
     Chassis.drive_inches(8.5);
@@ -46,15 +57,16 @@ void Push(){
     Chassis.drive_inches(-26);
 }
 
-void drive_test(){
-    Chassis.drive_inches(24); //testing big and small drives
-    Chassis.drive_inches(-24); 
-    Chassis.drive_inches(12); 
-    Chassis.drive_inches(12); 
-    Chassis.drive_inches(-8); 
-    Chassis.drive_inches(-4); 
+void drive_test()
+{
+    Chassis.drive_inches(24); // testing big and small drives
+    Chassis.drive_inches(-24);
+    Chassis.drive_inches(12);
+    Chassis.drive_inches(12);
+    Chassis.drive_inches(-8);
     Chassis.drive_inches(-4);
-    Chassis.drive_inches(-2); 
+    Chassis.drive_inches(-4);
+    Chassis.drive_inches(-2);
     Chassis.drive_inches(-2);
     Chassis.drive_inches(-1);
     Chassis.drive_inches(-1);
@@ -62,268 +74,327 @@ void drive_test(){
     Chassis.drive_inches(-1);
 }
 
-void turn_test(){
-    Chassis.turn_to_angle(45); //testing how fast fast turns are
+void turn_test()
+{
+    Chassis.turn_to_angle(45); // testing how fast fast turns are
     Chassis.turn_to_angle(90);
     Chassis.turn_to_angle(135);
     Chassis.turn_to_angle(180);
     Chassis.turn_to_angle(0);
 
-    for (int i = 0; i < 720; i+=10){ //testing how fast small turns are
-        Chassis.turn_to_angle(i); 
+    for (int i = 0; i < 720; i += 10)
+    { // testing how fast small turns are
+        Chassis.turn_to_angle(i);
     }
 }
 
-void soloAWP_PUSH(){
-    //constants
+void soloAWP_PUSH()
+{
+    // constants
     scraper = false;
     descoreLeft = true;
-    Chassis.driveMaxOutputVolts = 12;
+    Chassis.driveMaxOutputVolts = 10;
     vex::task antiJamBottom = vex::task(bottomAntiJam);
     vex::task antiJamTop = vex::task(topAntiJam);
 
-    //store mode
+    // store mode
     autoTopIntakeSpeed = -6.f;
     autoBottomIntakeSpeed = 120.f;
 
-    //push other bot off park zone
+    // push other bot off park zone
     Chassis.driveMaxTime = 500;
     Chassis.drive_inches(8);
-    //reset angle if adjusted by other bot
+    // reset angle if adjusted by other bot
     Chassis.turn_to_angle(0.0);
     Chassis.driveMaxTime = 1000;
-    //reduce speed for better control and go backwards
-    Chassis.driveMaxOutputVolts = 8;
+    // reduce speed for better control and go backwards
+    Chassis.driveMaxOutputVolts = 6;
     Chassis.drive_inches(-50.0);
 
     Chassis.driveMaxTime = 800;
     Chassis.turnMaxTime = 600;
     Chassis.turnSettleTime = 600;
-    //scraper down to prepare for matchload
+    // scraper down to prepare for matchload
     scraper = true;
     Chassis.driveMaxTime = 1000;
     Chassis.driveSettleTime = 800;
-    //distance sensor to align with wall
-    Chassis.drive_inches_from_wall(16, 0);
+    // distance sensor to align with wall
+    Chassis.driveMaxOutputVolts = 7;
+    Chassis.drive_inches_from_wall(17, 0);
     Chassis.driveMaxTime = 800;
     Chassis.driveSettleTime = 500;
     Chassis.turnSettleTime = 400;
-    //turn to face matchloader
+    // turn to face matchloader
     Chassis.turn_to_angle(-90);
     autoBottomIntakeSpeed = 120.f;
     Chassis.driveMaxOutputVolts = 5;
     Chassis.driveSettleTime = 1500;
     Chassis.driveMaxOutputVolts = 12;
-    //function to use distance sensor to align with matchloader and then load
-    Chassis.matchload(10.6, -90, 750);
+    // function to use distance sensor to align with matchloader and then load
+    Chassis.matchload(11.3, -90, 750);
     Chassis.turn_to_angle(-90);
     Chassis.driveMaxOutputVolts = 12;
     Chassis.driveMaxTime = 650;
-    //score on first long goal
+    // score on first long goal
     Chassis.drive_inches(-30.0);
     Chassis.driveMaxTime = 800;
-    //put scraper up to prevent interference with turn
+    // put scraper up to prevent interference with turn
     scraper = false;
-    autoTopIntakeSpeed = 120.f; 
-    wait(1, sec); 
-    //switch to storing again
+    autoTopIntakeSpeed = 120.f;
+    wait(1, sec);
+    // switch to storing again
     autoTopIntakeSpeed = -6.f;
-    //turn inside of long goal to face corner blocks
+    // turn inside of long goal to face corner blocks
     Chassis.turn_to_angle(10);
     Chassis.driveMaxOutputVolts = 10;
     Chassis.driveMaxTime = 1100;
-    //drive across corner blocks and collect
-    Chassis.drive_inches(54.5,0);
-    //put scraper down to prevent blocks from escaping
+    // drive across corner blocks and collect
+    Chassis.drive_inches(54.5, 0);
+    // put scraper down to prevent blocks from escaping
     scraper = true;
-    //turn to face middle goal and drive into it
+    // turn to face middle goal and drive into it
     Chassis.turn_to_angle(-45);
     Chassis.driveMaxTime = 800;
-    Chassis.drive_inches(-17,-45);
-    //outtake to stop jamming on mid goal
+    Chassis.drive_inches(-17, -45);
+    // outtake to stop jamming on mid goal
     autoBottomIntakeSpeed = -120.f;
-    wait(0.1,sec);
+    wait(0.1, sec);
     autoBottomIntakeSpeed = 120.f;
 
-    //spin hood backwards full speed to get any blocks out of hood and score
+    // spin hood backwards full speed to get any blocks out of hood and score
     autoTopIntakeSpeed = -12.f;
     autoBottomIntakeSpeed = -12.f;
-    //middle goal piston is inverted, so mid = true means down and mid = false means up
+    // middle goal piston is inverted, so mid = true means down and mid = false means up
     mid = true;
     wait(0.2, sec);
     autoBottomIntakeSpeed = 120.f;
     wait(0.8, sec);
-    //go back to storing
+    // go back to storing
     autoBottomIntakeSpeed = 0.f;
     mid = false;
     autoBottomIntakeSpeed = 120.f;
 
     Chassis.driveMaxTime = 1300;
     Chassis.driveMaxOutputVolts = 12;
-    //drive towards second long goal
-    Chassis.drive_inches(54.5,-45);
-    //turn to face second match loader
+    // drive towards second long goal
+    Chassis.drive_inches(52.5, -45);
+    // turn to face second match loader
     Chassis.turn_to_angle(-90);
     Chassis.driveSettleTime = 1500;
     Chassis.driveMaxOutputVolts = 12;
-    //use distance sensor to align with matchloader and load
-    Chassis.matchload(10.6, -90, 750);
+    // use distance sensor to align with matchloader and load
+    Chassis.matchload(11.3, -90, 750);
     Chassis.driveMaxOutputVolts = 10;
     Chassis.driveMaxTime = 1000;
-    //back into long goal
-    Chassis.drive_inches(-35,-90);
-    //score until time runs out
+    // back into long goal
+    Chassis.drive_inches(-35, -90);
+    // score until time runs out
     autoTopIntakeSpeed = 120.f;
 }
 
-void RBCrossover(){
+void RBCrossover()
+{
+    scraper = false; 
     Chassis.turn_to_angle(135);
-    Chassis.driveMaxTime = 5000; 
+    Chassis.driveMaxTime = 5000;
     Chassis.turnMaxOutputVolts = 4;
-    Chassis.drive_inches(-100,180);
+    Chassis.drive_inches(-100, 180);
     Chassis.turnMaxOutputVolts = 12;
+
+    Chassis.turnMaxTime = 2000; 
     Chassis.turn_to_angle(90);
-    Chassis.distanceMaxTime = 2000; 
-    Chassis.drive_inches_from_wall(18, 90, 0);
+
+    Chassis.distanceMaxTime = 2000;
+    wait(0.2, sec);
+    Chassis.drive_inches_from_wall(17.75, 90, 0);
     Chassis.turn_to_angle(0);
 
-    Chassis.driveMaxTime = 350; 
-    Chassis.drive_inches(-22);
-    Chassis.driveMaxTime = 750; 
+    Chassis.driveMaxTime = 550;
+    Chassis.drive_inches(-30);
     autoTopIntakeSpeed = 120.f;
     wait(2.5, sec);
-    Chassis.turn_to_angle(0); 
+    Chassis.turn_to_angle(0);
 
-    autoTopIntakeSpeed = 0.f; 
-    Chassis.matchload(11.1, 0, 2900);
+    autoTopIntakeSpeed = 0.f;
+    Chassis.driveMaxOutputVolts = 8.f; 
+    scraper = true; 
+    Chassis.drive_inches(20, 0);
+    Chassis.matchload(11.3, 0, 3200);
+    Chassis.driveMaxOutputVolts = 10.f; 
 
+    Chassis.driveMaxTime = 800;
     Chassis.drive_inches(-50);
     autoTopIntakeSpeed = 120.f;
     wait(2.5, sec);
 }
 
-void score(){
+void score()
+{
     vex::task antiJamBottom = vex::task(bottomAntiJam);
     vex::task antiJamTop = vex::task(topAntiJam);
     autoTopIntakeSpeed = -120.f;
     autoBottomIntakeSpeed = 120.f;
     scraper = true;
-    Chassis.matchload(11.1, 0, 5000);
+    Chassis.matchload(11.3, 0, 5000);
 }
 
-void clearPark(){
-    vex::task antiJamBottom = vex::task(bottomAntiJam);
-    scraper = false; 
+void clearPark()
+{
+    scraper = false;
 
-    Chassis.turnMaxOutputVolts = 4; 
+    Chassis.turnMaxOutputVolts = 4;
     Chassis.drive_inches(55, 90);
 
-    Chassis.driveMaxOutputVolts = 8.f;
+    Chassis.driveMaxOutputVolts = 6.5f;
     Chassis.driveMaxTime = 5000;
 
+    autoTopIntakeSpeed = -6.f;
     autoBottomIntakeSpeed = 120.f;
-    
-    Chassis.drive_inches(50, 85,
+
+    Chassis.drive_inches(52.5, 85,
                          {18}, {[](void)
                                 { scraper = true; }});
+    Chassis.turnMaxOutputVolts = 12.f;
 }
 
-void skills(){
+void skills()
+{
     vex::task antiJamBottom = vex::task(bottomAntiJam);
     vex::task antiJamTop = vex::task(topAntiJam);
-    mid = false; 
-    autoTopIntakeSpeed = -120.f;
+    mid = false;
+    descoreLeft = true;
+    autoTopIntakeSpeed = -6.f;
     autoBottomIntakeSpeed = 120.f;
 
-    Chassis.driveMaxOutputVolts = 6.f; 
+    Chassis.driveMaxOutputVolts = 6.f;
 
     // Chassis.drive_inches_from_wall(24.f,0);
-    Chassis.turn_to_angle(-20);
-    Chassis.drive_inches(28.f, -Chassis.get_heading(), {10, 24}, {[](void)
-                                                                    { Chassis.driveMaxOutputVolts = 3.f;}, [](void)
-                                                                    { scraper = true; }});
-    // Chassis.drive_inches(28.f); 
+
+    Chassis.turn_to_angle(-22.5);
+    Chassis.drive_inches(25.f, Chassis.get_heading(), {10, 24}, {[](void)
+                                                                 { Chassis.driveMaxOutputVolts = 3.f; }, [](void)
+                                                                 { scraper = true; }});
+    // Chassis.drive_inches(28.f);
     // scraper = true;
-    Chassis.driveMaxOutputVolts = 5.f; 
+    Chassis.driveMaxOutputVolts = 5.f;
     Chassis.turn_to_angle(-135);
-    Chassis.driveMaxTime = 1500; 
-    Chassis.drive_inches(-22);
+    Chassis.driveMaxTime = 1500;
+    Chassis.drive_inches(-26);
     Chassis.driveMaxTime = 3000;
     autoBottomIntakeSpeed = -12.f;
     mid = true;
     wait(0.2, sec);
     autoBottomIntakeSpeed = 120.f;
-    wait(0.8, sec);
+    wait(0.4, sec);
+    Chassis.turn_to_angle(-135);
     autoBottomIntakeSpeed = 0.f;
     mid = false;
     Chassis.driveMaxOutputVolts = 8.f;
 
-    // Chassis.turnMaxOutputVolts = 4.f; 
+    // Chassis.turnMaxOutputVolts = 4.f;
     // Chassis.drive_inches_from_wall(20, 1);
 
     Chassis.driveMaxTime = 5000;
     // Chassis.drive_inches(49.5);
-    Chassis.driveSettleTime = 300; 
-    Chassis.drive_inches(51.75);
-    Chassis.driveSettleTime = 100; 
+    Chassis.driveSettleTime = 300;
+    Chassis.driveSettleError = 0.3;
+    // Chassis.drive_inches(51.75);
+    Chassis.drive_inches(55.65);
+    Chassis.driveSettleError = 0.5;
+    Chassis.driveSettleTime = 100;
     Chassis.turn_to_angle(180);
-    Chassis.driveMaxTime = 500; 
-    Chassis.drive_inches(-25);
-    Chassis.driveMaxOutputVolts = 10.f;
-    autoTopIntakeSpeed = 120.f;
-    autoBottomIntakeSpeed = 120.f;
-    wait(1, sec);
-    Chassis.turn_to_angle(180);
+    // Chassis.driveMaxTime = 750;
+    // Chassis.drive_inches(-35);
+    // Chassis.driveMaxOutputVolts = 10.f;
+    // autoTopIntakeSpeed = 120.f;
+    // autoBottomIntakeSpeed = 120.f;
+    // wait(1.5, sec);
 
-    autoTopIntakeSpeed = 0; 
-    Chassis.matchload(11.1, -180, 2900);
+    // Chassis.turnMaxTime = 2000; 
+    // Chassis.turnSettleTime = 200; 
+    // Chassis.turn_to_angle(180); 
+
+    // autoTopIntakeSpeed = 0;
+    // // Chassis.matchload(11.3, -180, 3200);
+
+    // Chassis.driveMaxOutputVolts = 8.f; 
+    // Chassis.drive_inches(20, 180);
+    // Chassis.driveMaxOutputVolts = 10.f; 
+    Chassis.matchload(11.3, -180, 3200);
 
     RBCrossover();
+
+    Chassis.driveMaxTime = 1800;
     clearPark();
 
+    Chassis.distanceMaxOutputVolts = 6.f;
     Chassis.drive_inches_from_wall(50, 90, 1);
+    Chassis.distanceMaxOutputVolts = 8.f;
     Chassis.turn_to_angle(180);
-    Chassis.drive_inches_from_wall(45, 180, 0);
+    Chassis.drive_inches_from_wall(48, 180, 0);
     Chassis.turn_to_angle(45);
-    Chassis.driveMaxOutputVolts = 6;
+    Chassis.driveMaxOutputVolts = 5;
     Chassis.driveMaxTime = 750;
     Chassis.drive_inches(-20);
+
+    mid = true;
+    Chassis.drive_inches(0.4);
+    wait(0.2, sec);
+    autoBottomIntakeSpeed = 120.f;
+    wait(4, sec);
+    autoBottomIntakeSpeed = 0.f;
+    mid = false;
+    Chassis.driveMaxOutputVolts = 8.f;
+    Chassis.driveMaxTime = 5000;
+    Chassis.driveSettleTime = 300;
+    Chassis.drive_inches(55.55);
+    Chassis.turn_to_angle(0);
+    Chassis.set_heading(180 - Chassis.get_heading());
+    autoBottomIntakeSpeed = 120.f;
+    Chassis.matchload(11.3, 180, 2900);
+
+    RBCrossover();
+
+    Chassis.drive_inches(55, 90);
+    Chassis.drive_inches(20, 85);
 }
 
-void worseSkills(){
+void worseSkills()
+{
     vex::task antiJamBottom = vex::task(bottomAntiJam);
     vex::task antiJamTop = vex::task(topAntiJam);
     mid = false;
-    scraper = true; 
+    scraper = true;
 
     autoTopIntakeSpeed = -120.f;
     autoBottomIntakeSpeed = 120.f;
 
     Chassis.set_heading(90);
-    Chassis.drive_inches_from_wall(18, 90, 0);
+    Chassis.drive_inches_from_wall(17.75, 90, 0);
     Chassis.turn_to_angle(180);
-    Chassis.matchload(11.1, 180, 2900);
+    Chassis.matchload(11.3, 180, 2900);
 
     RBCrossover();
     Chassis.drive_inches(10);
     Chassis.turn_to_angle(-90);
-    Chassis.drive_inches_from_wall(17, -90, 0);
+    Chassis.drive_inches_from_wall(17.75, -90, 0);
     Chassis.turn_to_angle(0);
 
     Chassis.set_heading(180 - Chassis.get_heading());
-    Chassis.matchload(11.1, 180, 2900);
+    Chassis.matchload(11.3, 180, 2900);
 
     RBCrossover();
-    
+
     Chassis.drive_inches(55, 90);
     Chassis.driveMaxTime = 4000;
     Chassis.drive_inches(30);
 }
-void SkillsControlMiddle(){
+void SkillsControlMiddle()
+{
     scraper = false;
     descoreLeft = true;
     mid = false;
-    
+
     Chassis.driveMaxTime = 800;
     Chassis.turnMaxTime = 600;
     Chassis.turnSettleTime = 600;
@@ -332,7 +403,7 @@ void SkillsControlMiddle(){
     vex::task antiJamTop = vex::task(topAntiJam);
 
     autoBottomIntakeSpeed = 120.f;
-    autoTopIntakeSpeed = -6.f; 
+    autoTopIntakeSpeed = -6.f;
 
     Chassis.driveMaxOutputVolts = 11;
 
@@ -341,15 +412,15 @@ void SkillsControlMiddle(){
     Chassis.turn_to_angle(-135);
     Chassis.drive_inches(-15, -135);
     mid = true;
-    autoTopIntakeSpeed = -120.f; 
+    autoTopIntakeSpeed = -120.f;
     autoBottomIntakeSpeed = 120.f;
-    wait(3,sec);
+    wait(3, sec);
     mid = false;
-
 }
 
-//not aligned no constant block
-void rightSplit(){
+// not aligned no constant block
+void rightSplit()
+{
     Chassis.driveMaxTime = 800;
     Chassis.turnMaxTime = 600;
     Chassis.turnSettleTime = 600;
@@ -363,17 +434,17 @@ void rightSplit(){
     vex::task antiJamBottom = vex::task(bottomAntiJam);
     autoBottomIntakeSpeed = 120.f;
     Chassis.driveMaxOutputVolts = 5;
-    Chassis.matchload(11.1, 90, 800);
+    Chassis.matchload(11.3, 90, 800);
 
     Chassis.driveMaxOutputVolts = 5;
     Chassis.driveMaxTime = 1200;
     Chassis.drive_inches(-30.0);
-    autoTopIntakeSpeed = 11.f;  
+    autoTopIntakeSpeed = 11.f;
     Chassis.driveMaxOutputVolts = 11;
-    intakeRight.spin(vex::directionType::rev, 120, vex::voltageUnits::volt); 
+    intakeRight.spin(vex::directionType::rev, 120, vex::voltageUnits::volt);
     scraper = false;
     wait(1, seconds);
-    
+
     autoTopIntakeSpeed = 0.f;
     autoBottomIntakeSpeed = 6.f;
     Chassis.driveMaxTime = 1000;
@@ -381,7 +452,7 @@ void rightSplit(){
     autoTopIntakeSpeed = 120.f;
     Chassis.driveMaxOutputVolts = 10;
     Chassis.turnMaxOutputVolts = 6;
-    Chassis.drive_inches(23.3,220);
+    Chassis.drive_inches(23.3, 220);
     wait(1, seconds);
     autoBottomIntakeSpeed = -120.f;
     Chassis.driveMaxOutputVolts = 5;
@@ -394,45 +465,47 @@ void rightSplit(){
     Chassis.turnMaxOutputVolts = 6;
     Chassis.driveMaxOutputVolts = 11;
     descoreLeft = false;
-    Chassis.drive_inches(16,-90);
-    
+    Chassis.drive_inches(16, -90);
 }
-//aligned, constant block, untuned
-void right9ball(){
+// aligned, constant block, untuned
+void right9ball()
+{
     vex::task antiJamBottom = vex::task(bottomAntiJam);
     vex::task antiJamTop = vex::task(topAntiJam);
     Chassis.driveMaxOutputVolts = 10;
-    Chassis.turnMaxTime = 600;
+    Chassis.turnMaxTime = 1500;
     Chassis.driveMaxTime = 800;
-    Chassis.turnSettleTime = 600;
+    Chassis.turnSettleTime = 200;
     Chassis.driveSettleTime = 700;
     autoBottomIntakeSpeed = 120.f;
-    autoTopIntakeSpeed = -6.f; 
+    autoTopIntakeSpeed = -6.f;
     scraper = false;
     descoreLeft = true;
 
     Chassis.turn_to_angle(15);
-    Chassis.drive_inches(28.f, Chassis.get_heading(), {10, 24}, {[](void)
-                                                                    { Chassis.driveMaxOutputVolts = 3.f;}, [](void)
-                                                                    { scraper = true; }});
+    Chassis.driveMaxOutputVolts = 11;
+    Chassis.drive_inches(28.f, Chassis.get_heading(), {20, 24}, {[](void)
+                                                                 { Chassis.driveMaxOutputVolts = 3.f; }, [](void)
+                                                                 { scraper = false; }});
     Chassis.driveMaxOutputVolts = 9;
     Chassis.driveMaxTime = 1000;
     Chassis.turnMaxOutputVolts = 6;
-    Chassis.drive_inches(36.5,50);
-    Chassis.driveMaxTime = 1300;
+    Chassis.turn_to_angle(55);
+    Chassis.drive_inches(24.f, Chassis.get_heading(), {20}, {[](void)
+                                                             { scraper = true; }});
     Chassis.turnMaxOutputVolts = 6;
-    Chassis.drive_inches(-40,-90);
-    Chassis.drive_inches_from_wall(15.5,-90,0);
+    Chassis.drive_inches(-35, -90);
+    Chassis.drive_inches_from_wall(18.25, -90, 0);
     scraper = true;
     Chassis.turn_to_angle(180);
-    Chassis.matchload(11, 180, 700);
-    Chassis.turn_to_angle(180);
+    Chassis.matchload(11.3, 180, 1400);
     Chassis.driveMaxTime = 800;
-    Chassis.drive_inches(-26);
+    Chassis.drive_inches(-29);
     autoTopIntakeSpeed = 120.f;
 }
-//aligned constant block
-void right4ballcorner(){
+// aligned constant block
+void right4ballcorner()
+{
     vex::task antiJamBottom = vex::task(bottomAntiJam);
     vex::task antiJamTop = vex::task(topAntiJam);
     Chassis.driveMaxOutputVolts = 10;
@@ -441,30 +514,31 @@ void right4ballcorner(){
     Chassis.turnSettleTime = 600;
     Chassis.driveSettleTime = 700;
     autoBottomIntakeSpeed = 120.f;
-    autoTopIntakeSpeed = -6.f; 
+    autoTopIntakeSpeed = -6.f;
     scraper = false;
     descoreLeft = true;
 
     Chassis.turn_to_angle(15);
     Chassis.drive_inches(28.f, Chassis.get_heading(), {10, 24}, {[](void)
-                                                                    { Chassis.driveMaxOutputVolts = 3.f;}, [](void)
-                                                                    { scraper = true; }});
+                                                                 { Chassis.driveMaxOutputVolts = 3.f; }, [](void)
+                                                                 { scraper = true; }});
     Chassis.driveMaxOutputVolts = 6;
     Chassis.turnMaxOutputVolts = 6;
-    Chassis.drive_inches(-34,-90);
+    Chassis.drive_inches(-34, -90);
     Chassis.turnMaxOutputVolts = 10;
-    Chassis.drive_inches_from_wall(17,-90,0);
+    Chassis.drive_inches_from_wall(17, -90, 0);
     Chassis.turn_to_angle(180);
     Chassis.driveMaxOutputVolts = 8;
     Chassis.drive_inches(-24);
-    autoTopIntakeSpeed = 120.f; 
-    wait(1.3,sec);
+    autoTopIntakeSpeed = 120.f;
+    wait(1.3, sec);
     scraper = false;
-    Push(); 
+    Push();
 }
-//aligned, constant block
-void right4ballmatchload(){
-    
+// aligned, constant block
+void right4ballmatchload()
+{
+
     vex::task antiJamBottom = vex::task(bottomAntiJam);
     vex::task antiJamTop = vex::task(topAntiJam);
     Chassis.driveMaxOutputVolts = 10;
@@ -473,24 +547,25 @@ void right4ballmatchload(){
     Chassis.turnSettleTime = 600;
     Chassis.driveSettleTime = 700;
     autoBottomIntakeSpeed = 120.f;
-    autoTopIntakeSpeed = -6.f; 
+    autoTopIntakeSpeed = -6.f;
     scraper = false;
     descoreLeft = true;
-    
-    Chassis.drive_inches(35,0);
-    Chassis.drive_inches_from_wall(19,0,1);
+
+    Chassis.drive_inches(35, 0);
+    Chassis.drive_inches_from_wall(19, 0, 1);
     Chassis.turn_to_angle(90);
     scraper = true;
-    Chassis.matchload(11, 90, 700);
+    Chassis.matchload(11.3, 90, 700);
     Chassis.drive_inches(-34);
-    autoTopIntakeSpeed = 120.f; 
-    wait(1.3,sec);
+    autoTopIntakeSpeed = 120.f;
+    wait(1.3, sec);
     scraper = false;
     autoTopIntakeSpeed = -6.f;
-    Push(); 
+    Push();
 }
-//aligned constant block
-void right7ball(){
+// aligned constant block
+void right7ball()
+{
     vex::task antiJamBottom = vex::task(bottomAntiJam);
     vex::task antiJamTop = vex::task(topAntiJam);
     Chassis.driveMaxOutputVolts = 10;
@@ -499,27 +574,27 @@ void right7ball(){
     Chassis.turnSettleTime = 600;
     Chassis.driveSettleTime = 700;
     autoBottomIntakeSpeed = 120.f;
-    autoTopIntakeSpeed = -6.f; 
+    autoTopIntakeSpeed = -6.f;
     scraper = false;
     descoreLeft = true;
 
     Chassis.turn_to_angle(15);
     Chassis.drive_inches(28.f, Chassis.get_heading(), {10, 24}, {[](void)
-                                                                    { Chassis.driveMaxOutputVolts = 3.f;}, [](void)
-                                                                    { scraper = true; }});
+                                                                 { Chassis.driveMaxOutputVolts = 3.f; }, [](void)
+                                                                 { scraper = true; }});
     Chassis.turnMaxOutputVolts = 6;
-    Chassis.drive_inches(-34,-90);
+    Chassis.drive_inches(-34, -90);
     Chassis.turnMaxOutputVolts = 10;
-    Chassis.drive_inches_from_wall(17,-90,0);
+    Chassis.drive_inches_from_wall(17, -90, 0);
     scraper = true;
     Chassis.turn_to_angle(180);
     Chassis.turnMaxOutputVolts = 7;
-    Chassis.matchload(11, 180, 700);
+    Chassis.matchload(11.3, 180, 700);
     Chassis.turn_to_angle(-180);
     Chassis.driveMaxOutputVolts = 8;
     Chassis.drive_inches(-36);
-    autoTopIntakeSpeed = 120.f; 
-    wait(2.2,sec);
+    autoTopIntakeSpeed = 120.f;
+    wait(2.2, sec);
     scraper = false;
     autoTopIntakeSpeed = -6.f;
     Chassis.turn_to_angle(120);
@@ -528,9 +603,10 @@ void right7ball(){
     descoreLeft = false;
     Chassis.drive_inches(-28);
 }
-//theory coded, aligned, constant block
-void right10ball(){
-    //modular constant block
+// theory coded, aligned, constant block
+void right10ball()
+{
+    // modular constant block
     vex::task antiJamBottom = vex::task(bottomAntiJam);
     vex::task antiJamTop = vex::task(topAntiJam);
     Chassis.driveMaxOutputVolts = 10;
@@ -539,56 +615,57 @@ void right10ball(){
     Chassis.turnSettleTime = 600;
     Chassis.driveSettleTime = 700;
     autoBottomIntakeSpeed = 120.f;
-    autoTopIntakeSpeed = -6.f; 
+    autoTopIntakeSpeed = -6.f;
     scraper = false;
     descoreLeft = true;
 
-    //4 block matchload code
-    //drive forward to align to wall
-    Chassis.drive_inches(35,0);
-    Chassis.drive_inches_from_wall(19,0,1);
-    //turn to face matchloader and load
+    // 4 block matchload code
+    // drive forward to align to wall
+    Chassis.drive_inches(35, 0);
+    Chassis.drive_inches_from_wall(19, 0, 1);
+    // turn to face matchloader and load
     Chassis.turn_to_angle(90);
     scraper = true;
-    //matchloader distance sensor alignment function
-    Chassis.matchload(11, 90, 700);
-    //drive into long goal
+    // matchloader distance sensor alignment function
+    Chassis.matchload(11.3, 90, 700);
+    // drive into long goal
     Chassis.drive_inches(-34);
-    autoTopIntakeSpeed = 120.f; 
-    wait(1.3,sec);
+    autoTopIntakeSpeed = 120.f;
+    wait(1.3, sec);
     scraper = false;
     autoTopIntakeSpeed = -6.f;
 
-    //solo awp code without the long goal scoring
+    // solo awp code without the long goal scoring
     Chassis.turn_to_angle(-10);
     Chassis.driveMaxOutputVolts = 10;
     Chassis.driveMaxTime = 1100;
-    //drive across corner blocks and collect
-    Chassis.drive_inches(54.5,0);
-    //put scraper down to prevent blocks from escaping
+    // drive across corner blocks and collect
+    Chassis.drive_inches(54.5, 0);
+    // put scraper down to prevent blocks from escaping
     scraper = true;
-    //turn to face middle goal and drive into it
+    // turn to face middle goal and drive into it
     Chassis.turn_to_angle(-45);
     Chassis.driveMaxTime = 800;
-    Chassis.drive_inches(-17,-45);
-    //outtake to stop jamming on mid goal
+    Chassis.drive_inches(-17, -45);
+    // outtake to stop jamming on mid goal
     autoBottomIntakeSpeed = -120.f;
-    wait(0.1,sec);
+    wait(0.1, sec);
     autoBottomIntakeSpeed = 120.f;
 
-    //spin hood backwards full speed to get any blocks out of hood and score
+    // spin hood backwards full speed to get any blocks out of hood and score
     autoTopIntakeSpeed = -12.f;
     autoBottomIntakeSpeed = -12.f;
-    //middle goal piston is inverted, so mid = true means down and mid = false means up
+    // middle goal piston is inverted, so mid = true means down and mid = false means up
     mid = true;
     wait(0.2, sec);
     autoBottomIntakeSpeed = 120.f;
 }
 
-void leftSplit(){
-
+void leftSplit()
+{
 }
-void left7ball(){
+void left7ball()
+{
     vex::task antiJamBottom = vex::task(bottomAntiJam);
     vex::task antiJamTop = vex::task(topAntiJam);
     Chassis.driveMaxOutputVolts = 10;
@@ -597,28 +674,28 @@ void left7ball(){
     Chassis.turnSettleTime = 600;
     Chassis.driveSettleTime = 700;
     autoBottomIntakeSpeed = 120.f;
-    autoTopIntakeSpeed = -6.f; 
+    autoTopIntakeSpeed = -6.f;
     scraper = false;
     descoreLeft = true;
 
     Chassis.turn_to_angle(-15);
-    //might not be the right angle
+    // might not be the right angle
     Chassis.drive_inches(28.f, Chassis.get_heading(), {10, 24}, {[](void)
-                                                                    { Chassis.driveMaxOutputVolts = 3.f;}, [](void)
-                                                                    { scraper = true; }});
+                                                                 { Chassis.driveMaxOutputVolts = 3.f; }, [](void)
+                                                                 { scraper = true; }});
     Chassis.turnMaxOutputVolts = 6;
-    Chassis.drive_inches(-34,90);
+    Chassis.drive_inches(-34, 90);
     Chassis.turnMaxOutputVolts = 10;
-    Chassis.drive_inches_from_wall(17,90,0);
+    Chassis.drive_inches_from_wall(17, 90, 0);
     scraper = true;
     Chassis.turn_to_angle(180);
     Chassis.turnMaxOutputVolts = 7;
-    Chassis.matchload(11, 180, 700);
+    Chassis.matchload(11.3, 180, 700);
     Chassis.turn_to_angle(-180);
     Chassis.driveMaxOutputVolts = 8;
     Chassis.drive_inches(-36);
-    autoTopIntakeSpeed = 120.f; 
-    wait(2.2,sec);
+    autoTopIntakeSpeed = 120.f;
+    wait(2.2, sec);
     scraper = false;
     autoTopIntakeSpeed = -6.f;
     Chassis.turn_to_angle(120);
@@ -628,7 +705,8 @@ void left7ball(){
     Chassis.drive_inches(-28);
 }
 
-void left4ballcorner(){
+void left4ballcorner()
+{
     vex::task antiJamBottom = vex::task(bottomAntiJam);
     vex::task antiJamTop = vex::task(topAntiJam);
     Chassis.driveMaxOutputVolts = 10;
@@ -637,30 +715,31 @@ void left4ballcorner(){
     Chassis.turnSettleTime = 600;
     Chassis.driveSettleTime = 700;
     autoBottomIntakeSpeed = 120.f;
-    autoTopIntakeSpeed = -6.f; 
+    autoTopIntakeSpeed = -6.f;
     scraper = false;
     descoreLeft = true;
-    
+
     Chassis.turn_to_angle(-15);
     Chassis.drive_inches(28.f, Chassis.get_heading(), {10, 24}, {[](void)
-                                                                    { Chassis.driveMaxOutputVolts = 3.f;}, [](void)
-                                                                    { scraper = true; }});
+                                                                 { Chassis.driveMaxOutputVolts = 3.f; }, [](void)
+                                                                 { scraper = true; }});
     Chassis.driveMaxOutputVolts = 6;
     Chassis.turnMaxOutputVolts = 6;
-    Chassis.drive_inches(-34,90);
+    Chassis.drive_inches(-34, 90);
     Chassis.turnMaxOutputVolts = 10;
-    Chassis.drive_inches_from_wall(17,90,0);
+    Chassis.drive_inches_from_wall(17, 90, 0);
     Chassis.turn_to_angle(180);
     Chassis.driveMaxOutputVolts = 8;
     Chassis.drive_inches(-24);
-    autoTopIntakeSpeed = 120.f; 
-    wait(1.3,sec);
+    autoTopIntakeSpeed = 120.f;
+    wait(1.3, sec);
     scraper = false;
     autoTopIntakeSpeed = -6.f;
     Push();
 }
 
-void left4ballmatchload(){
+void left4ballmatchload()
+{
     vex::task antiJamBottom = vex::task(bottomAntiJam);
     vex::task antiJamTop = vex::task(topAntiJam);
     Chassis.driveMaxOutputVolts = 10;
@@ -669,19 +748,31 @@ void left4ballmatchload(){
     Chassis.turnSettleTime = 600;
     Chassis.driveSettleTime = 700;
     autoBottomIntakeSpeed = 120.f;
-    autoTopIntakeSpeed = -6.f; 
+    autoTopIntakeSpeed = -6.f;
     scraper = false;
     descoreLeft = true;
-    
-    Chassis.drive_inches(35,0);
-    Chassis.drive_inches_from_wall(19,0,1);
+
+    Chassis.drive_inches(35, 0);
+    Chassis.drive_inches_from_wall(19, 0, 1);
     Chassis.turn_to_angle(-90);
     scraper = true;
-    Chassis.matchload(11, -90, 700);
+    Chassis.matchload(11.3, -90, 700);
     Chassis.drive_inches(-34);
-    autoTopIntakeSpeed = 120.f; 
-    wait(1.3,sec);
+    autoTopIntakeSpeed = 120.f;
+    wait(1.3, sec);
     scraper = false;
     autoTopIntakeSpeed = -6.f;
     Push();
+}
+
+void test()
+{
+    scraper = false;
+    vex::task antiJamBottom = vex::task(bottomAntiJam);
+    vex::task antiJamTop = vex::task(topAntiJam);
+    autoTopIntakeSpeed = 120.f;
+    autoBottomIntakeSpeed = 120.f;
+    scraper = true;
+
+    Chassis.matchload(11.3, 0, 2900);
 }
