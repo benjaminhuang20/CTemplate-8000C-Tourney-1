@@ -127,8 +127,8 @@ void soloAWP_PUSH()
     float prevDistanceSettleTime = Chassis.distanceSettleTime;
     float prevDistanceSettleError = Chassis.distanceSettleError;
     float prevDistanceMaxOutputVolts = Chassis.distanceMaxOutputVolts;
-    Chassis.set_distance_constants(1.2f, 0.0f, 60.0f, 600.0f, 400.0f, 1.2f, 7.8f, Chassis.distanceSlew);
-    Chassis.drive_inches_from_wall(21, 1);
+    Chassis.set_distance_constants(1.2f, 0.0f, 60.0f, 600.0f, 400.0f, 1.2f, 11.f, Chassis.distanceSlew);
+    Chassis.drive_inches_from_wall(20.8, 1);
     Chassis.set_distance_constants(
         prevDistanceP,
         prevDistanceI,
@@ -144,13 +144,13 @@ void soloAWP_PUSH()
     // turn to face matchloader
     Chassis.turn_to_angle(90);
     autoBottomIntakeSpeed = 120.f;
-    Chassis.driveMaxOutputVolts = 5;
+    Chassis.driveMaxOutputVolts = 10;
     Chassis.driveSettleTime = 1500;
     Chassis.driveMaxOutputVolts = 12;
     // function to use distance sensor to align with matchloader and then load
     Chassis.matchload(11.2, 90, 850);
-    Chassis.driveMaxOutputVolts = 8;
-    Chassis.driveMaxTime = 1000;
+    Chassis.driveMaxOutputVolts = 7;
+    Chassis.driveMaxTime = 900;
     // score on first long goal
     Chassis.drive_inches(-35.0);
     Chassis.driveMaxTime = 800;
@@ -161,6 +161,7 @@ void soloAWP_PUSH()
     // switch to storing again
     autoTopIntakeSpeed = -6.f;
     // turn inside of long goal to face corner blocks
+    Chassis.turnMaxTime = 400;
     Chassis.turn_to_angle(190);
     Chassis.driveMaxOutputVolts = 10;
     Chassis.driveMaxTime = 1100;
@@ -201,10 +202,10 @@ void soloAWP_PUSH()
     Chassis.turnMaxOutputVolts = 11;
     Chassis.driveMaxTime = 1500;
     // Chassis.drive_inches(40, 180);
-    Chassis.drive_inches(54.5,135);
+    Chassis.drive_inches(51.7,135);
     Chassis.turn_to_angle(90);
     Chassis.driveMaxTime = 500;
-    Chassis.matchload(11.1, 90, 900);
+    Chassis.matchload(11.2, 90, 900);
 
     //Chassis.drive_inches_from_wall(16, 0, 1);
     // turn to face second match loader
