@@ -30,11 +30,11 @@ void pre_auton()
 { // set things like if pneumatics start actuated or not here and any variables that have to start at a certain position
   Chassis.set_drive_constants(2, 0, 100, 5000, 200, 0.5, 10, 0.5f); 
   // Chassis.set_turn_constants(0.45, 0.02, 60, 1000, 100, 2, 10);
-  Chassis.set_turn_constants(0.35, 0.02, 39.5, 1000, 200, 2, 10, 100.f);
+  Chassis.set_turn_constants(0.35, 0.02, 37.5, 1000, 200, 2, 10, 100.f);
   // Chassis.set_turn_constants(0.47, 0.02, 40, 1500, 100, 2, 12);
   // Chassis.set_distance_constants(1.2, 0, 45, 5000, 100, 0.5, 4.5);
-  // Chassis.set_distance_constants(1.2, 0, 45, 5000, 300, 0.5, 10);
-  Chassis.set_distance_constants(2, 0, 100, 6000, 300, 0.3, 6, 0.5f); 
+  Chassis.set_distance_constants(1.2, 0, 60, 5000, 300, 0.5, 8, 0.5f);
+  // Chassis.set_distance_constants(2, 0, 120, 6000, 300, 0.5, 8, 0.5f); 
   Chassis.pidUpdateTime = 10;
 
   bool toggleUp = true, toggleDown = true;
@@ -153,6 +153,10 @@ void auton()
     case (7):
       // turn_test();
       worseSkills();
+      // Chassis.drive_inches(15);
+      // Chassis.turn_to_angle(-90);
+      // Chassis.drive_inches_from_wall(17.75, -90, 0);
+      // Chassis.turn_to_angle(0);
       //Chassis.drive_inches(2);
       // Chassis.set_heading(180);
       // RBCrossover();

@@ -225,37 +225,43 @@ void soloAWP_PUSH()
 void RBCrossover()
 {
     // scraper = false; 
-    Chassis.turn_to_angle(135);
-    Chassis.driveMaxTime = 5000;
+    // Chassis.turn_to_angle(135);
+
+    
     Chassis.turnMaxOutputVolts = 4;
-    Chassis.drive_inches(-100, 180);
+    Chassis.drive_inches(-8, 135);
+    Chassis.driveMaxTime = 5000;
+    Chassis.drive_inches(-90, 180);
     Chassis.turnMaxOutputVolts = 12;
 
-    Chassis.turnMaxTime = 2000; 
+    Chassis.turnMaxTime = 1000;
+    Chassis.turnSettleTime = 200;
     Chassis.turn_to_angle(90);
 
     Chassis.distanceMaxTime = 2000;
     wait(0.2, sec);
-    Chassis.drive_inches_from_wall(17.75, 90, 0);
+    Chassis.drive_inches_from_wall(17.25, 90, 0);
     Chassis.turn_to_angle(0);
 
     Chassis.driveMaxTime = 550;
     Chassis.drive_inches(-30);
-    autoTopIntakeSpeed = 120.f;
-    wait(2.5, sec);
+    intakeRight.spin(fwd, -120.f, volt);
+    wait(2.8, sec);
     Chassis.turn_to_angle(0);
 
-    autoTopIntakeSpeed = 0.f;
+    intakeRight.spin(fwd, 120.f, volt);
     Chassis.driveMaxOutputVolts = 8.f; 
     scraper = true;
     // Chassis.drive_inches(20, 0);
-    Chassis.matchload(11.2, 0, 3200);
-    Chassis.driveMaxOutputVolts = 10.f; 
+    Chassis.matchload(11.2, 0, 3000);
+    Chassis.turn_to_angle(6);
+    Chassis.driveMaxOutputVolts = 10.f;
 
     Chassis.driveMaxTime = 800;
     Chassis.drive_inches(-50);
-    autoTopIntakeSpeed = 120.f;
-    wait(2.5, sec);
+    intakeRight.spin(fwd, 120.f, volt);
+    wait(2.8, sec);
+    
 }
 
 void score()
@@ -392,30 +398,34 @@ void skills()
 void worseSkills()
 {
     vex::task antiJamBottom = vex::task(bottomAntiJam);
-    vex::task antiJamTop = vex::task(topAntiJam);
+    
     mid = false;
     scraper = true;
 
-    autoTopIntakeSpeed = -120.f;
+    intakeRight.spin(fwd, 120.f, volt);
     autoBottomIntakeSpeed = 120.f;
 
     Chassis.set_heading(90);
     Chassis.drive_inches_from_wall(17.75, 90, 0);
     Chassis.turn_to_angle(180);
     Chassis.matchload(11.3, 180, 2900);
-
     RBCrossover();
-    Chassis.drive_inches(10);
+
+    Chassis.drive_inches(15);
     Chassis.turn_to_angle(-90);
-    Chassis.drive_inches_from_wall(17.75, -90, 0);
+    Chassis.distanceMaxTime = 4000;
+    // Chassis.drive_inches_from_wall(17.75, -90, 0);
+    Chassis.drive_inches_from_wall(17.25, -90, 0);
     Chassis.turn_to_angle(0);
 
+    // Chassis.set_heading(180 - Chassis.get_heading());
+    Chassis.matchload(11.2, 0, 2900);
     Chassis.set_heading(180 - Chassis.get_heading());
-    Chassis.matchload(11.2, 180, 2900);
 
     RBCrossover();
 
-    Chassis.turnMaxOutputVolts = 2.f; 
+    scraper = false; 
+    Chassis.turnMaxOutputVolts = 2.f;
     Chassis.drive_inches(55, 90);
     Chassis.driveMaxTime = 4000;
     Chassis.drive_inches(30);

@@ -75,7 +75,7 @@ chassis Chassis = chassis(
 
 int auto_started = 0;
 bool allow_selector = true;
-int currentAuto = 6;
+int currentAuto = 7;
 int currentSide = 0;
 float autoBottomIntakeSpeed;
 float autoTopIntakeSpeed; 
