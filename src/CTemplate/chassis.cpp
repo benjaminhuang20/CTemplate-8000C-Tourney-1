@@ -16,7 +16,7 @@ chassis::chassis(vex::motor_group left, vex::motor_group right, vex::inertial gy
     this->gearRatio = gearRatio; 
 }
 
-void chassis::set_drive_constants(float driveP, float driveI, float driveD, float driveMaxTime, float driveSettleTime, float driveSettleError, float driveMaxOutputVolts){
+void chassis::set_drive_constants(float driveP, float driveI, float driveD, float driveMaxTime, float driveSettleTime, float driveSettleError, float driveMaxOutputVolts, float driveSlew){
     this->driveP = driveP;
     this->driveI = driveI;
     this->driveD = driveD;
@@ -24,9 +24,10 @@ void chassis::set_drive_constants(float driveP, float driveI, float driveD, floa
     this->driveSettleTime = driveSettleTime;
     this->driveSettleError = driveSettleError;
     this->driveMaxOutputVolts = driveMaxOutputVolts;
+    this->driveSlew = driveSlew; 
 }
 
-void chassis::set_odom_constants(float odomP, float odomI, float odomD, float odomMaxTime, float odomSettleTime, float odomSettleError, float odomMaxOutputVolts){
+void chassis::set_odom_constants(float odomP, float odomI, float odomD, float odomMaxTime, float odomSettleTime, float odomSettleError, float odomMaxOutputVolts, float odomSlew){
     this->odomP = odomP;
     this->odomI = odomI;
     this->odomD = odomD;
@@ -34,26 +35,29 @@ void chassis::set_odom_constants(float odomP, float odomI, float odomD, float od
     this->odomSettleTime = odomSettleTime;
     this->odomSettleError = odomSettleError;
     this->odomMaxOutputVolts = odomMaxOutputVolts;
+    this->odomSlew = odomSlew; 
 }
 
-void chassis::set_turn_constants(float turnP, float turnI, float turnD, float turnMaxTime, float turnSettleTime, float turnSettleError, float turnMaxOutputVolts){
+void chassis::set_turn_constants(float turnP, float turnI, float turnD, float turnMaxTime, float turnSettleTime, float turnSettleError, float turnMaxOutputVolts, float turnSlew){
     this->turnP = turnP;
     this->turnI = turnI;
     this->turnD = turnD;
     this->turnMaxTime = turnMaxTime;
     this->turnSettleTime = turnSettleTime;
     this->turnSettleError = turnSettleError;
-    this->turnMaxOutputVolts = turnMaxOutputVolts; 
+    this->turnMaxOutputVolts = turnMaxOutputVolts;
+    this->turnSlew = turnSlew; 
 }
 
-void chassis::set_distance_constants(float distanceP, float distanceI, float distanceD, float distanceMaxTime, float distanceSettleTime, float distanceSettleError, float distanceMaxOutputVolts){
+void chassis::set_distance_constants(float distanceP, float distanceI, float distanceD, float distanceMaxTime, float distanceSettleTime, float distanceSettleError, float distanceMaxOutputVolts, float distanceSlew){
     this->distanceP = distanceP;
     this->distanceI = distanceI;
     this->distanceD = distanceD;
     this->distanceMaxTime = distanceMaxTime;
     this->distanceSettleTime = distanceSettleTime; 
     this->distanceSettleError = distanceSettleError;
-    this->distanceMaxOutputVolts = distanceMaxOutputVolts; 
+    this->distanceMaxOutputVolts = distanceMaxOutputVolts;
+    this->distanceSlew = distanceSlew; 
 }
 
 float chassis::get_heading(){
@@ -93,9 +97,10 @@ void chassis::drive_inches(float distance, float heading){
 }
 
 void chassis::drive_inches(float distance, float heading, std::vector<float> commandDistances,std::vector<std::function<void()>> commands){
-    pid drivePID = pid(driveP, driveI, driveD, pidUpdateTime, driveMaxTime, driveSettleTime, driveSettleError, driveMaxOutputVolts); 
+    pid drivePID = pid(driveP, driveI, driveD, pidUpdateTime, driveMaxTime, driveSettleTime, driveSettleError, driveMaxOutputVolts);
+    drivePID.set_slew_constants(driveSlew);
     pid turnPID = pid(turnP, turnI, turnD, pidUpdateTime, turnMaxTime, turnSettleTime, turnSettleError, turnMaxOutputVolts);
-
+    turnPID.set_slew_constants(turnSlew);
     float startPosition = (leftPositionInches() + rightPositionInches()) / 2.f;
     float averagePosition;
     float driveError, turnError;
@@ -137,8 +142,10 @@ void chassis::drive_inches_odom(float distance){
 }
 
 void chassis::drive_inches_odom(float distance, float heading){
-    pid drivePID = pid(driveP, driveI, driveD, pidUpdateTime, driveMaxTime, driveSettleTime, driveSettleError, driveMaxOutputVolts); //switch to odom?
+    pid drivePID = pid(driveP, driveI, driveD, pidUpdateTime, driveMaxTime, driveSettleTime, driveSettleError, driveMaxOutputVolts);
+    drivePID.set_slew_constants(driveSlew);
     pid turnPID = pid(turnP, turnI, turnD, pidUpdateTime, turnMaxTime, turnSettleTime, turnSettleError, turnMaxOutputVolts);
+    turnPID.set_slew_constants(turnSlew);
 
     float startPosition = verticalOdom.position(deg) / 360 * verticalOdomDiameter * 3.14159;
     float currentPosition;
@@ -170,6 +177,7 @@ void chassis::drive_inches_odom(float distance, float heading){
 
 void chassis::turn_to_angle(float heading){
     pid turnPID = pid(turnP, turnI, turnD, pidUpdateTime, turnMaxTime, turnSettleTime, turnSettleError, turnMaxOutputVolts);
+    turnPID.set_slew_constants(turnSlew);
     float turnError, turnVoltage;
 
     heading = reduce_heading(heading); 
@@ -195,7 +203,9 @@ void chassis::drive_inches_from_wall(float distance, int wall)
 
 void chassis::drive_inches_from_wall(float distance, float heading, int wall){
     pid drivePID = pid(distanceP, distanceI, distanceD, pidUpdateTime, distanceMaxTime, distanceSettleTime, distanceSettleError, distanceMaxOutputVolts);
+    drivePID.set_slew_constants(distanceSlew);
     pid turnPID = pid(turnP, turnI, turnD, pidUpdateTime, turnMaxTime, turnSettleTime, turnSettleError, turnMaxOutputVolts);
+    turnPID.set_slew_constants(turnSlew);
     float currentPosition;
     float driveError, turnError;
     float driveVoltage, turnVoltage; 
@@ -250,6 +260,7 @@ void chassis::matchload(float distance, float heading, float time){
 
 void chassis::left_swing_to_angle(float heading){
     pid turnPID = pid(turnP, turnI, turnD, pidUpdateTime, turnMaxTime, turnSettleTime, turnSettleError, turnMaxOutputVolts);
+    turnPID.set_slew_constants(turnSlew);
     float turnError, turnVoltage;
 
     heading = reduce_heading(heading); 
@@ -269,6 +280,7 @@ void chassis::left_swing_to_angle(float heading){
 }
 void chassis::right_swing_to_angle(float heading){
     pid turnPID = pid(turnP, turnI, turnD, pidUpdateTime, turnMaxTime, turnSettleTime, turnSettleError, turnMaxOutputVolts);
+    turnPID.set_slew_constants(turnSlew);
     float turnError, turnVoltage;
 
     heading = reduce_heading(heading); 

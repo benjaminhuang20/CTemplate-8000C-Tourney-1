@@ -30,10 +30,10 @@ class chassis{
         vex::distance backDistance;
 
         float pidUpdateTime; 
-        float driveP, driveI, driveD, driveMaxTime, driveSettleTime, driveSettleError, driveMaxOutputVolts;
-        float odomP, odomI, odomD, odomMaxTime, odomSettleTime, odomSettleError, odomMaxOutputVolts; 
-        float turnP, turnI, turnD, turnMaxTime, turnSettleTime, turnSettleError, turnMaxOutputVolts;
-        float distanceP, distanceI, distanceD, distanceMaxTime, distanceSettleTime, distanceSettleError, distanceMaxOutputVolts;
+        float driveP, driveI, driveD, driveMaxTime, driveSettleTime, driveSettleError, driveMaxOutputVolts, driveSlew;
+        float odomP, odomI, odomD, odomMaxTime, odomSettleTime, odomSettleError, odomMaxOutputVolts, odomSlew; 
+        float turnP, turnI, turnD, turnMaxTime, turnSettleTime, turnSettleError, turnMaxOutputVolts, turnSlew;
+        float distanceP, distanceI, distanceD, distanceMaxTime, distanceSettleTime, distanceSettleError, distanceMaxOutputVolts, distanceSlew;
 
         float gyroScale;
         float wheelDiameter;
@@ -42,10 +42,10 @@ class chassis{
 
 
         chassis(vex::motor_group left, vex::motor_group right, vex::inertial gyroscope, float gyroScale, float wheelDiameter, float gearRatio, vex::rotation verticalOdom, float verticalOdomDiameter, vex::distance leftDistance, vex::distance rightDistance, vex::distance frontDistance, vex::distance backDistance);
-        void set_drive_constants(float driveP, float driveI, float driveD, float driveMaxTime, float driveSettleTime, float driveSettleError, float driveMaxOutputVolts);
-        void set_odom_constants(float odomP, float odomI, float odomD, float odomMaxTime, float odomSettleTime, float odomSettleError, float odomMaxOutputVolts);
-        void set_turn_constants(float turnP, float turnI, float turnD, float turnMaxTime, float turnSettleTime, float turnSettleError, float turnMaxOutputVolts);
-        void set_distance_constants(float distanceP, float distanceI, float distanceD, float distanceMaxTime, float distanceSettleTime, float distanceSettleError, float distanceMaxOutputVolts);
+        void set_drive_constants(float driveP, float driveI, float driveD, float driveMaxTime, float driveSettleTime, float driveSettleError, float driveMaxOutputVolts, float driveSlew);
+        void set_odom_constants(float odomP, float odomI, float odomD, float odomMaxTime, float odomSettleTime, float odomSettleError, float odomMaxOutputVolts, float odomSlew);
+        void set_turn_constants(float turnP, float turnI, float turnD, float turnMaxTime, float turnSettleTime, float turnSettleError, float turnMaxOutputVolts, float turnSlew);
+        void set_distance_constants(float distanceP, float distanceI, float distanceD, float distanceMaxTime, float distanceSettleTime, float distanceSettleError, float distanceMaxOutputVolts, float distanceSlew);
         
         float get_heading();
         void set_heading(float heading); 

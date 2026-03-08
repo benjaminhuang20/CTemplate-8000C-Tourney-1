@@ -127,7 +127,7 @@ void soloAWP_PUSH()
     float prevDistanceSettleTime = Chassis.distanceSettleTime;
     float prevDistanceSettleError = Chassis.distanceSettleError;
     float prevDistanceMaxOutputVolts = Chassis.distanceMaxOutputVolts;
-    Chassis.set_distance_constants(1.2f, 0.0f, 60.0f, 600.0f, 400.0f, 1.2f, 7.f);
+    Chassis.set_distance_constants(1.2f, 0.0f, 60.0f, 600.0f, 400.0f, 1.2f, 7.8f, Chassis.distanceSlew);
     Chassis.drive_inches_from_wall(21, 1);
     Chassis.set_distance_constants(
         prevDistanceP,
@@ -136,7 +136,8 @@ void soloAWP_PUSH()
         prevDistanceMaxTime,
         prevDistanceSettleTime,
         prevDistanceSettleError,
-        prevDistanceMaxOutputVolts);
+        prevDistanceMaxOutputVolts,
+        Chassis.distanceSlew);
     Chassis.driveMaxTime = 800;
     Chassis.driveSettleTime = 800;
     Chassis.turnSettleTime = 300;
@@ -156,7 +157,7 @@ void soloAWP_PUSH()
     // put scraper up to prevent interference with turn
     scraper = false;
     autoTopIntakeSpeed = 120.f;
-    wait(1.2, sec);
+    wait(1.0, sec);
     // switch to storing again
     autoTopIntakeSpeed = -6.f;
     // turn inside of long goal to face corner blocks
@@ -173,7 +174,7 @@ void soloAWP_PUSH()
     // turn to face middle goal and drive into it
     Chassis.turn_to_angle(135);
     Chassis.driveMaxTime = 800;
-    Chassis.drive_inches(-15.6, 135);
+    Chassis.drive_inches(-15.3, 135);
     // outtake to stop jamming on mid goal
     autoBottomIntakeSpeed = -120.f;
     wait(0.1, sec);
@@ -181,7 +182,7 @@ void soloAWP_PUSH()
 
     // spin hood backwards full speed to get any blocks out of hood and score
     autoTopIntakeSpeed = -12.f;
-    autoBottomIntakeSpeed = -4.f;
+    autoBottomIntakeSpeed = -2.f;
     // middle goal piston is inverted, so mid = true means down and mid = false means up
     mid = true;
     wait(0.2, sec);
@@ -197,17 +198,16 @@ void soloAWP_PUSH()
     // drive towards second long goal
 
     
-    Chassis.turnMaxOutputVolts = 3;
+    Chassis.turnMaxOutputVolts = 11;
     Chassis.driveMaxTime = 1500;
     // Chassis.drive_inches(40, 180);
-    Chassis.drive_inches(55.65);
+    Chassis.drive_inches(54.5,135);
     Chassis.turn_to_angle(90);
     Chassis.driveMaxTime = 500;
     Chassis.matchload(11.1, 90, 900);
 
     //Chassis.drive_inches_from_wall(16, 0, 1);
     // turn to face second match loader
-    Chassis.turn_to_angle(90);
     Chassis.driveSettleTime = 1500;
     Chassis.driveMaxOutputVolts = 12;
     // use distance sensor to align with matchloader and load
