@@ -49,7 +49,9 @@ chassis Chassis = chassis(
         Vex Gyroscopes usually consistently drift. So this means that for every rotation it will be some number of degrees off, and that number of degrees is consistent.
         The gyro scale shows how much the the true heading changes every time the gyro reads 360 degrees. It is shown below:
     */
-    352.8f,
+    // 352.8f,
+    // 360.f,
+    351.8f,
 
     /*
         Wheel Diameter and RPM are below. RPM is calculated by driver/driven * cartridge
@@ -73,7 +75,7 @@ chassis Chassis = chassis(
 
 int auto_started = 0;
 bool allow_selector = true;
-int currentAuto =7;
+int currentAuto = 6;
 int currentSide = 0;
 float autoBottomIntakeSpeed;
 float autoTopIntakeSpeed; 

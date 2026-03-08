@@ -51,10 +51,10 @@ void Push()
 {
     Chassis.set_heading(180);
     Chassis.turn_to_angle(60);
-    Chassis.drive_inches(8.5);
-    Chassis.turn_to_angle(90);
+    Chassis.drive_inches(8);
+    Chassis.turn_to_angle(180);
     descoreLeft = false;
-    Chassis.drive_inches(-26);
+    Chassis.drive_inches(-20);
 }
 
 void drive_test()
@@ -102,60 +102,78 @@ void soloAWP_PUSH()
     autoBottomIntakeSpeed = 120.f;
 
     // push other bot off park zone
-    Chassis.driveMaxTime = 500;
-    Chassis.drive_inches(8);
+    // Chassis.driveMaxTime = 500;
+    // Chassis.drive_inches(8);
     // reset angle if adjusted by other bot
-    Chassis.turn_to_angle(0.0);
-    Chassis.driveMaxTime = 1000;
+    // Chassis.turn_to_angle(0.0);
+    // Chassis.driveMaxTime = 1000;
     // reduce speed for better control and go backwards
     Chassis.driveMaxOutputVolts = 6;
-    Chassis.drive_inches(-50.0);
+    Chassis.drive_inches(35.0);
 
     Chassis.driveMaxTime = 800;
-    Chassis.turnMaxTime = 600;
+    Chassis.turnMaxTime = 700;
     Chassis.turnSettleTime = 600;
     // scraper down to prepare for matchload
     scraper = true;
-    Chassis.driveMaxTime = 1000;
+    Chassis.driveMaxTime = 500;
     Chassis.driveSettleTime = 800;
     // distance sensor to align with wall
-    Chassis.driveMaxOutputVolts = 7;
-    Chassis.drive_inches_from_wall(17, 0);
+    Chassis.driveMaxOutputVolts = 10;
+    float prevDistanceP = Chassis.distanceP;
+    float prevDistanceI = Chassis.distanceI;
+    float prevDistanceD = Chassis.distanceD;
+    float prevDistanceMaxTime = Chassis.distanceMaxTime;
+    float prevDistanceSettleTime = Chassis.distanceSettleTime;
+    float prevDistanceSettleError = Chassis.distanceSettleError;
+    float prevDistanceMaxOutputVolts = Chassis.distanceMaxOutputVolts;
+    Chassis.set_distance_constants(1.2f, 0.0f, 60.0f, 600.0f, 400.0f, 1.2f, 7.f);
+    Chassis.drive_inches_from_wall(21, 1);
+    Chassis.set_distance_constants(
+        prevDistanceP,
+        prevDistanceI,
+        prevDistanceD,
+        prevDistanceMaxTime,
+        prevDistanceSettleTime,
+        prevDistanceSettleError,
+        prevDistanceMaxOutputVolts);
     Chassis.driveMaxTime = 800;
-    Chassis.driveSettleTime = 500;
-    Chassis.turnSettleTime = 400;
+    Chassis.driveSettleTime = 800;
+    Chassis.turnSettleTime = 300;
     // turn to face matchloader
-    Chassis.turn_to_angle(-90);
+    Chassis.turn_to_angle(90);
     autoBottomIntakeSpeed = 120.f;
     Chassis.driveMaxOutputVolts = 5;
     Chassis.driveSettleTime = 1500;
     Chassis.driveMaxOutputVolts = 12;
     // function to use distance sensor to align with matchloader and then load
-    Chassis.matchload(11.3, -90, 750);
-    Chassis.turn_to_angle(-90);
-    Chassis.driveMaxOutputVolts = 12;
-    Chassis.driveMaxTime = 650;
+    Chassis.matchload(11.2, 90, 850);
+    Chassis.driveMaxOutputVolts = 8;
+    Chassis.driveMaxTime = 1000;
     // score on first long goal
-    Chassis.drive_inches(-30.0);
+    Chassis.drive_inches(-35.0);
     Chassis.driveMaxTime = 800;
     // put scraper up to prevent interference with turn
     scraper = false;
     autoTopIntakeSpeed = 120.f;
-    wait(1, sec);
+    wait(1.2, sec);
     // switch to storing again
     autoTopIntakeSpeed = -6.f;
     // turn inside of long goal to face corner blocks
-    Chassis.turn_to_angle(10);
+    Chassis.turn_to_angle(190);
     Chassis.driveMaxOutputVolts = 10;
     Chassis.driveMaxTime = 1100;
     // drive across corner blocks and collect
-    Chassis.drive_inches(54.5, 0);
+    Chassis.turn_to_angle(180);
+        Chassis.drive_inches(50.5, Chassis.get_heading(), {3, 25, 45}, {[](void)
+                                                                 { scraper = true;}, [](void)
+                                                                 { scraper = false; }, [](void)
+                                                                 { scraper = true; }});
     // put scraper down to prevent blocks from escaping
-    scraper = true;
     // turn to face middle goal and drive into it
-    Chassis.turn_to_angle(-45);
+    Chassis.turn_to_angle(135);
     Chassis.driveMaxTime = 800;
-    Chassis.drive_inches(-17, -45);
+    Chassis.drive_inches(-15.6, 135);
     // outtake to stop jamming on mid goal
     autoBottomIntakeSpeed = -120.f;
     wait(0.1, sec);
@@ -163,7 +181,7 @@ void soloAWP_PUSH()
 
     // spin hood backwards full speed to get any blocks out of hood and score
     autoTopIntakeSpeed = -12.f;
-    autoBottomIntakeSpeed = -12.f;
+    autoBottomIntakeSpeed = -4.f;
     // middle goal piston is inverted, so mid = true means down and mid = false means up
     mid = true;
     wait(0.2, sec);
@@ -177,24 +195,35 @@ void soloAWP_PUSH()
     Chassis.driveMaxTime = 1300;
     Chassis.driveMaxOutputVolts = 12;
     // drive towards second long goal
-    Chassis.drive_inches(52.5, -45);
+
+    
+    Chassis.turnMaxOutputVolts = 3;
+    Chassis.driveMaxTime = 1500;
+    // Chassis.drive_inches(40, 180);
+    Chassis.drive_inches(55.65);
+    Chassis.turn_to_angle(90);
+    Chassis.driveMaxTime = 500;
+    Chassis.matchload(11.1, 90, 900);
+
+    //Chassis.drive_inches_from_wall(16, 0, 1);
     // turn to face second match loader
-    Chassis.turn_to_angle(-90);
+    Chassis.turn_to_angle(90);
     Chassis.driveSettleTime = 1500;
     Chassis.driveMaxOutputVolts = 12;
     // use distance sensor to align with matchloader and load
-    Chassis.matchload(11.3, -90, 750);
-    Chassis.driveMaxOutputVolts = 10;
-    Chassis.driveMaxTime = 1000;
+    //Chassis.matchload(11.3, -90, 750);
+    //Chassis.driveMaxOutputVolts = 10;
+    //Chassis.driveMaxTime = 1000;
     // back into long goal
-    Chassis.drive_inches(-35, -90);
+    Chassis.driveMaxTime = 700;
+    Chassis.drive_inches(-35, 90);
     // score until time runs out
     autoTopIntakeSpeed = 120.f;
 }
 
 void RBCrossover()
 {
-    scraper = false; 
+    // scraper = false; 
     Chassis.turn_to_angle(135);
     Chassis.driveMaxTime = 5000;
     Chassis.turnMaxOutputVolts = 4;
@@ -217,9 +246,9 @@ void RBCrossover()
 
     autoTopIntakeSpeed = 0.f;
     Chassis.driveMaxOutputVolts = 8.f; 
-    scraper = true; 
-    Chassis.drive_inches(20, 0);
-    Chassis.matchload(11.3, 0, 3200);
+    scraper = true;
+    // Chassis.drive_inches(20, 0);
+    Chassis.matchload(11.2, 0, 3200);
     Chassis.driveMaxOutputVolts = 10.f; 
 
     Chassis.driveMaxTime = 800;
@@ -381,10 +410,11 @@ void worseSkills()
     Chassis.turn_to_angle(0);
 
     Chassis.set_heading(180 - Chassis.get_heading());
-    Chassis.matchload(11.3, 180, 2900);
+    Chassis.matchload(11.2, 180, 2900);
 
     RBCrossover();
 
+    Chassis.turnMaxOutputVolts = 2.f; 
     Chassis.drive_inches(55, 90);
     Chassis.driveMaxTime = 4000;
     Chassis.drive_inches(30);
@@ -569,8 +599,8 @@ void right7ball()
     vex::task antiJamBottom = vex::task(bottomAntiJam);
     vex::task antiJamTop = vex::task(topAntiJam);
     Chassis.driveMaxOutputVolts = 10;
-    Chassis.turnMaxTime = 600;
-    Chassis.driveMaxTime = 800;
+    Chassis.turnMaxTime = 800;
+    Chassis.driveMaxTime = 1100;
     Chassis.turnSettleTime = 600;
     Chassis.driveSettleTime = 700;
     autoBottomIntakeSpeed = 120.f;
@@ -579,17 +609,19 @@ void right7ball()
     descoreLeft = true;
 
     Chassis.turn_to_angle(15);
-    Chassis.drive_inches(28.f, Chassis.get_heading(), {10, 24}, {[](void)
-                                                                 { Chassis.driveMaxOutputVolts = 3.f; }, [](void)
+    Chassis.drive_inches(32.f, Chassis.get_heading(), {18, 24}, {[](void)
+                                                                 { Chassis.driveMaxOutputVolts = 8.f; }, [](void)
                                                                  { scraper = true; }});
-    Chassis.turnMaxOutputVolts = 6;
-    Chassis.drive_inches(-34, -90);
+    Chassis.driveMaxTime = 700;
+    Chassis.turnMaxOutputVolts = 7;
+    Chassis.drive_inches(-33, -90);
     Chassis.turnMaxOutputVolts = 10;
-    Chassis.drive_inches_from_wall(17, -90, 0);
+    // Chassis.drive_inches_from_wall(17.25, -90, 0);
+    Chassis.drive_inches_from_wall(16.5, -90, 0);
     scraper = true;
     Chassis.turn_to_angle(180);
     Chassis.turnMaxOutputVolts = 7;
-    Chassis.matchload(11.3, 180, 700);
+    Chassis.matchload(11.2, 180, 1100);
     Chassis.turn_to_angle(-180);
     Chassis.driveMaxOutputVolts = 8;
     Chassis.drive_inches(-36);
@@ -597,11 +629,7 @@ void right7ball()
     wait(2.2, sec);
     scraper = false;
     autoTopIntakeSpeed = -6.f;
-    Chassis.turn_to_angle(120);
-    Chassis.drive_inches(8.5);
-    Chassis.turn_to_angle(180);
-    descoreLeft = false;
-    Chassis.drive_inches(-28);
+    Push();
 }
 // theory coded, aligned, constant block
 void right10ball()
@@ -663,6 +691,74 @@ void right10ball()
 
 void leftSplit()
 {
+    vex::task antiJamBottom = vex::task(bottomAntiJam);
+    vex::task antiJamTop = vex::task(topAntiJam);
+    mid = false;
+    descoreLeft = true;
+    autoTopIntakeSpeed = -6.f;
+    autoBottomIntakeSpeed = 120.f;
+
+    Chassis.driveMaxOutputVolts = 6.f;
+
+    // Chassis.drive_inches_from_wall(24.f,0);
+
+    Chassis.turn_to_angle(-22.5);
+    Chassis.drive_inches(25.f, Chassis.get_heading(), {10, 24}, {[](void)
+                                                                 { Chassis.driveMaxOutputVolts = 3.f; }, [](void)
+                                                                 { scraper = true; }});
+    // Chassis.drive_inches(28.f);
+    // scraper = true;
+    Chassis.driveMaxOutputVolts = 5.f;
+    Chassis.turn_to_angle(-135);
+    Chassis.driveMaxTime = 1500;
+    Chassis.drive_inches(-26);
+    Chassis.driveMaxTime = 3000;
+    autoBottomIntakeSpeed = -12.f;
+    mid = true;
+    wait(0.2, sec);
+    autoBottomIntakeSpeed = 120.f;
+    wait(1, sec);
+    Chassis.turn_to_angle(-135);
+    autoBottomIntakeSpeed = 0.f;
+    mid = false;
+    Chassis.driveMaxOutputVolts = 8.f;
+
+    // Chassis.turnMaxOutputVolts = 4.f;
+    // Chassis.drive_inches_from_wall(20, 1);
+
+    Chassis.driveMaxTime = 5000;
+    // Chassis.drive_inches(49.5);
+    Chassis.driveSettleTime = 300;
+    Chassis.driveSettleError = 0.3;
+    // Chassis.drive_inches(51.75);
+    Chassis.drive_inches(55.65);
+    Chassis.driveSettleError = 0.5;
+    Chassis.driveSettleTime = 100;
+    Chassis.turn_to_angle(180);
+    // Chassis.driveMaxTime = 750;
+    // Chassis.drive_inches(-35);
+    // Chassis.driveMaxOutputVolts = 10.f;
+    // autoTopIntakeSpeed = 120.f;
+    // autoBottomIntakeSpeed = 120.f;
+    // wait(1.5, sec);
+
+    // Chassis.turnMaxTime = 2000; 
+    // Chassis.turnSettleTime = 200; 
+    // Chassis.turn_to_angle(180); 
+
+    // autoTopIntakeSpeed = 0;
+    // // Chassis.matchload(11.3, -180, 3200);
+
+    // Chassis.driveMaxOutputVolts = 8.f; 
+    // Chassis.drive_inches(20, 180);
+    // Chassis.driveMaxOutputVolts = 10.f; 
+    autoBottomIntakeSpeed = 120.f;
+    Chassis.matchload(11.3, -180, 2000);
+    Chassis.driveMaxTime = 950; 
+    Chassis.driveMaxOutputVolts = 8.f;
+    Chassis.drive_inches(-55,180);
+    autoTopIntakeSpeed = 120.f;
+
 }
 void left7ball()
 {
